@@ -9,6 +9,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
 
 <link rel="stylesheet" href="/css/main.css">
 
@@ -26,7 +28,7 @@
     exturl: false,
     sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
     copycode: {"enable":false,"show_result":false,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
     bookmark: {"enable":false,"color":"#222","save":"auto"},
     fancybox: false,
     mediumzoom: false,
@@ -46,22 +48,22 @@
   };
 </script>
 
-  <meta name="description" content="一、安装hexo 的安装依赖 git 和 node.js 1.1 安装 git1sudo apt-get install git-core  1.2 安装 Node.js 进入官网，找到 Linux Binaries (x64) ，右键，复制链接">
+  <meta name="description" content="一、安装hexo 的安装依赖 git 和 node.js 1.1 安装 git1sudo apt-get install git-core 1.2 安装 Node.js 进入官网，找到 Linux Binaries (x64) ，右键，复制链接">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Github 上搭建 Hexo 博客(基于Ubuntu)">
-<meta property="og:url" content="http://yoursite.com/2020/01/19/Github%20%E4%B8%8A%E6%90%AD%E5%BB%BA%20hexo%20%E5%8D%9A%E5%AE%A2(%E5%9F%BA%E4%BA%8EUbuntu)/index.html">
+<meta property="og:url" content="http://yoursite.com/2020/01/19/Ubuntu_Github_Hexo/index.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="一、安装hexo 的安装依赖 git 和 node.js 1.1 安装 git1sudo apt-get install git-core  1.2 安装 Node.js 进入官网，找到 Linux Binaries (x64) ，右键，复制链接">
+<meta property="og:description" content="一、安装hexo 的安装依赖 git 和 node.js 1.1 安装 git1sudo apt-get install git-core 1.2 安装 Node.js 进入官网，找到 Linux Binaries (x64) ，右键，复制链接">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-01-19T14:10:42.417Z">
-<meta property="article:modified_time" content="2020-01-19T14:31:26.877Z">
+<meta property="article:modified_time" content="2020-01-20T13:01:25.420Z">
 <meta property="article:author" content="Z. Wang">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="Git">
 <meta property="article:tag" content="Hexo">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2020/01/19/Github%20%E4%B8%8A%E6%90%AD%E5%BB%BA%20hexo%20%E5%8D%9A%E5%AE%A2(%E5%9F%BA%E4%BA%8EUbuntu)/">
+<link rel="canonical" href="http://yoursite.com/2020/01/19/Ubuntu_Github_Hexo/">
 
 
 <script id="page-configurations">
@@ -163,10 +165,6 @@
     </header>
 
     
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
 
 
     <main class="main">
@@ -182,7 +180,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/19/Github%20%E4%B8%8A%E6%90%AD%E5%BB%BA%20hexo%20%E5%8D%9A%E5%AE%A2(%E5%9F%BA%E4%BA%8EUbuntu)/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/19/Ubuntu_Github_Hexo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.png">
@@ -204,18 +202,24 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-01-19 22:10:42 / 修改时间：22:31:26" itemprop="dateCreated datePublished" datetime="2020-01-19T22:10:42+08:00">2020-01-19</time>
+              <time title="创建时间：2020-01-19 22:10:42" itemprop="dateCreated datePublished" datetime="2020-01-19T22:10:42+08:00">2020-01-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-20 21:01:25" itemprop="dateModified" datetime="2020-01-20T21:01:25+08:00">2020-01-20</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
+                  <a href="/categories/Hexo/" itemprop="url" rel="index">
+                    <span itemprop="name">Hexo</span>
                   </a>
                 </span>
             </span>
@@ -233,12 +237,10 @@
       
         <h2 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h2><p>hexo 的安装依赖 git 和 node.js</p>
 <h3 id="1-1-安装-git"><a href="#1-1-安装-git" class="headerlink" title="1.1 安装 git"></a>1.1 安装 git</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git-core</span><br></pre></td></tr></table></figure>
-
 <h3 id="1-2-安装-Node-js"><a href="#1-2-安装-Node-js" class="headerlink" title="1.2 安装 Node.js"></a>1.2 安装 Node.js</h3><ul>
 <li>进入<a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">官网</a>，找到 Linux Binaries (x64) ，右键，复制链接</li>
 </ul>
 <a id="more"></a>
-
 <ul>
 <li><p>下载：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;nodejs.org&#x2F;dist&#x2F;v12.14.1&#x2F;node-v12.14.1-linux-x64.tar.xz</span><br></pre></td></tr></table></figure>
@@ -248,58 +250,41 @@
 </li>
 <li><p>配置环境变量</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit ~&#x2F;.bashrc</span><br></pre></td></tr></table></figure>
-
 <p>往 .bashrc 中新增环境变量</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export NODE_HOME&#x3D;&#x2F;home&#x2F;wang&#x2F;node-v12.14.1-linux-x64</span><br><span class="line">export PATH&#x3D;$PATH:$NODE_HOME&#x2F;bin</span><br><span class="line">export NODE_PATH&#x3D;$NODE_HOME&#x2F;lib&#x2F;node_modules</span><br></pre></td></tr></table></figure>
-
 <p>source 一下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~&#x2F;.bashrc</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>检查是否安装成功</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
 <p>有版本号出现则表示成功</p>
 </li>
 </ul>
 <h3 id="1-3-安装-hexo"><a href="#1-3-安装-hexo" class="headerlink" title="1.3 安装 hexo"></a>1.3 安装 hexo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
 <h2 id="二、建站"><a href="#二、建站" class="headerlink" title="二、建站"></a>二、建站</h2><h3 id="2-1-初始化-Hexo"><a href="#2-1-初始化-Hexo" class="headerlink" title="2.1 初始化 Hexo:"></a>2.1 初始化 Hexo:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init &lt;folder&gt;</span><br><span class="line">cd &lt;folder&gt;</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-
 <p><code>&lt;folder&gt;</code> 是想要搭建的博客的路径，比如：~/Blog</p>
 <h3 id="2-2-生成静态文件"><a href="#2-2-生成静态文件" class="headerlink" title="2.2 生成静态文件"></a>2.2 生成静态文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
-
 <h3 id="2-3-启动服务器，预览"><a href="#2-3-启动服务器，预览" class="headerlink" title="2.3 启动服务器，预览"></a>2.3 启动服务器，预览</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
 <h2 id="三、将本地-Hexo-部署到-github-上"><a href="#三、将本地-Hexo-部署到-github-上" class="headerlink" title="三、将本地 Hexo 部署到 github 上"></a>三、将本地 Hexo 部署到 github 上</h2><h3 id="3-1-创建新的-repositories"><a href="#3-1-创建新的-repositories" class="headerlink" title="3.1 创建新的 repositories"></a>3.1 创建新的 repositories</h3><p>Repository name: <code>用户名.github.io</code></p>
 <h3 id="3-2-配置-Git-个人信息"><a href="#3-2-配置-Git-个人信息" class="headerlink" title="3.2 配置 Git 个人信息"></a>3.2 配置 Git 个人信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name github用户名</span><br><span class="line">git config --global user.email 你注册的邮箱地址</span><br></pre></td></tr></table></figure>
-
 <p>生成密钥</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C 你注册的邮箱地址</span><br></pre></td></tr></table></figure>
-
 <h3 id="3-3-配置-SSH"><a href="#3-3-配置-SSH" class="headerlink" title="3.3 配置 SSH"></a>3.3 配置 SSH</h3><p>生成 SSH:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br></pre></td></tr></table></figure>
-
 <p>三次回车之后，可以生成id_rsa.pub文件，打开：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit ~&#x2F;.ssh&#x2F;id_rsa.pub</span><br></pre></td></tr></table></figure>
-
-<p>拷贝所有内容 –&gt; 打开github，头像，settings –&gt; SSH –&gt; Add new ssh key –&gt; 粘贴复制的信息，title任意</p>
+<p>拷贝所有内容 —&gt; 打开github，头像，settings —&gt; SSH —&gt; Add new ssh key —&gt; 粘贴复制的信息，title任意</p>
 <p>最后输入以下命令，根据提示输入yes，判断SSH是否配置好：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
 <p>若出现如下内容，则表示配置完成</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
 <h3 id="3-4-配置Deployment"><a href="#3-4-配置Deployment" class="headerlink" title="3.4 配置Deployment"></a>3.4 配置Deployment</h3><p>在 _config.yml 文件中，找到 deploy，修改：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:wg96&#x2F;wg96.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-
 <h3 id="3-5-本地文件提交到-GitHub"><a href="#3-5-本地文件提交到-GitHub" class="headerlink" title="3.5 本地文件提交到 GitHub"></a>3.5 本地文件提交到 GitHub</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean             # 删除旧的 public 文件</span><br><span class="line">hexo g                      # 生成新的 public 文件</span><br><span class="line">hexo d                      # 开始部署</span><br></pre></td></tr></table></figure>
-
 <p>如果执行 <code>hexo d</code> 出现错误：ERROR Deployer not found: git</p>
 <p>安装一个扩展即可：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
-
 <hr>
 <p>参考文献</p>
 <p>[1] <a href="https://www.cnblogs.com/huangenai/p/10815426.html" target="_blank" rel="noopener">Linux nodejs 安装以及配置环境</a></p>
@@ -310,7 +295,7 @@
 <hr>
 <p>进一步学习</p>
 <p>[1] <a href="https://zhuanlan.zhihu.com/p/26625249" target="_blank" rel="noopener">GitHub+Hexo 搭建个人网站详细教程</a></p>
-<p>[2] <a href=""></a></p>
+<p>[2] <a href></a></p>
 
     </div>
 
@@ -331,10 +316,13 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/01/18/%E5%AE%89%E8%A3%85%20Ubuntu%2018.04/" rel="prev" title="安装 Ubuntu 18.04">
+    <a href="/2020/01/18/Install_Ubuntu_18.04/" rel="prev" title="安装 Ubuntu 18.04">
       <i class="fa fa-chevron-left"></i> 安装 Ubuntu 18.04
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/01/20/next-change-archive/" rel="next" title="Next 主题修改归档开头显示的文字">
+      Next 主题修改归档开头显示的文字 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -410,14 +398,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -432,6 +420,10 @@
 
 
       </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
 
     </div>
   </aside>
@@ -506,6 +498,8 @@
 
 
 
+
+  
 
   
 
