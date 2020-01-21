@@ -48,17 +48,21 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+  <meta name="description" content="以下是安装 pytorch 的一些尝试，不过最终还是没有安装成功，因为显卡是 gt755， Compute Capability 太低。如果之后解决了这个问题，再好好整理安装过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装 pytorch 的一些尝试">
+<meta property="og:url" content="http://yoursite.com/2020/01/21/install-pytorch/index.html">
 <meta property="og:site_name" content="Blog">
+<meta property="og:description" content="以下是安装 pytorch 的一些尝试，不过最终还是没有安装成功，因为显卡是 gt755， Compute Capability 太低。如果之后解决了这个问题，再好好整理安装过程。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-19T12:42:19.000Z">
-<meta property="article:modified_time" content="2020-01-19T12:45:41.924Z">
+<meta property="article:published_time" content="2020-01-21T06:25:33.000Z">
+<meta property="article:modified_time" content="2020-01-21T06:39:31.605Z">
 <meta property="article:author" content="Z. Wang">
+<meta property="article:tag" content="Deep learning">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/tags/">
+<link rel="canonical" href="http://yoursite.com/2020/01/21/install-pytorch/">
 
 
 <script id="page-configurations">
@@ -66,12 +70,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>标签 | Blog
-  </title>
+  <title>安装 pytorch 的一些尝试 | Blog</title>
   
 
 
@@ -167,52 +170,112 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
           <div class="content">
             
 
   <div class="posts-expand">
-    
-    
-    
-    <div class="post-block" lang="zh-CN">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/21/install-pytorch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Z. Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          安装 pytorch 的一些尝试
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">标签
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
 
-<div class="post-meta">
+              <time title="创建时间：2020-01-21 14:25:33 / 修改时间：14:39:31" itemprop="dateCreated datePublished" datetime="2020-01-21T14:25:33+08:00">2020-01-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep learning</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>以下是安装 pytorch 的一些尝试，不过最终还是没有安装成功，因为显卡是 gt755， Compute Capability 太低。如果之后解决了这个问题，再好好整理安装过程。</p>
+<a id="more"></a>
+<h1 id="1-linux-安装-cuda"><a href="#1-linux-安装-cuda" class="headerlink" title="1. linux 安装 cuda"></a>1. linux 安装 cuda</h1><ul>
+<li><a href="https://blog.csdn.net/wanzhen4330/article/details/81699769" target="_blank" rel="noopener">Ubuntu16.04下安装cuda和cudnn的三种方法（亲测全部有效）</a></li>
+<li><a href="https://blog.csdn.net/wf19930209/article/details/81879514" target="_blank" rel="noopener">Linux安装CUDA的正确姿势</a></li>
+</ul>
+<h1 id="2-Ubuntu18-04安装cuda9-0"><a href="#2-Ubuntu18-04安装cuda9-0" class="headerlink" title="2. Ubuntu18.04安装cuda9.0"></a>2. Ubuntu18.04安装cuda9.0</h1><ul>
+<li><a href="https://blog.csdn.net/pblearning/article/details/89814431#8.%20%E5%AE%89%E8%A3%85tensorflow-gpu" target="_blank" rel="noopener">Ubuntu18.04安装cuda9.0，cudnn7.0.5，Anaconda3-5.2.0和TensorFlow-gpu1.8.0</a></li>
+</ul>
+<h1 id="3-Pytorch-安装慢"><a href="#3-Pytorch-安装慢" class="headerlink" title="3. Pytorch 安装慢"></a>3. Pytorch 安装慢</h1><ul>
+<li><a href="https://blog.csdn.net/chenxp106/article/details/82793149" target="_blank" rel="noopener">pytorch安装很慢</a></li>
+<li><a href="https://blog.csdn.net/qq_41936559/article/details/102699082" target="_blank" rel="noopener">pytorch下载太慢的解决办法</a>  详细</li>
+<li><a href="https://blog.csdn.net/watermelon1123/article/details/88122020" target="_blank" rel="noopener">conda安装Pytorch下载过慢解决办法</a></li>
+</ul>
+<h1 id="4-cannot-import-‘PILLOW-VERSION’"><a href="#4-cannot-import-‘PILLOW-VERSION’" class="headerlink" title="4. cannot import ‘PILLOW_VERSION’"></a>4. cannot import ‘PILLOW_VERSION’</h1><p><a href="https://github.com/python-pillow/Pillow/issues/4130" target="_blank" rel="noopener">https://github.com/python-pillow/Pillow/issues/4130</a></p>
+<h1 id="5-PyTorch-no-longer-supports-this-GPU-because-it-is-too-old"><a href="#5-PyTorch-no-longer-supports-this-GPU-because-it-is-too-old" class="headerlink" title="5. PyTorch no longer supports this GPU because it is too old."></a>5. PyTorch no longer supports this GPU because it is too old.</h1><p><a href="https://blog.csdn.net/qq_32492561/article/details/79671147" target="_blank" rel="noopener">https://blog.csdn.net/qq_32492561/article/details/79671147</a></p>
+<p><a href="https://blog.csdn.net/u010327061/article/details/80298966" target="_blank" rel="noopener">https://blog.csdn.net/u010327061/article/details/80298966</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Deep-learning/" rel="tag"># Deep learning</a>
+              <a href="/tags/pytorch/" rel="tag"># pytorch</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/21/next-scrollpercent/" rel="prev" title="Next 主题 sidebar 显示阅读进度">
+      <i class="fa fa-chevron-left"></i> Next 主题 sidebar 显示阅读进度
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-              目前共计 5 个标签
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/Deep-learning/" style="font-size: 12px; color: #ccc">Deep learning</a> <a href="/tags/Git/" style="font-size: 12px; color: #ccc">Git</a> <a href="/tags/Hexo/" style="font-size: 30px; color: #111">Hexo</a> <a href="/tags/Linux/" style="font-size: 21px; color: #6f6f6f">Linux</a> <a href="/tags/pytorch/" style="font-size: 12px; color: #ccc">pytorch</a>
-            </div>
-          </div>
-        
-      </div>
-      
-      
-      
-    </div>
-    
-
-    
-    
-    
   </div>
 
 
@@ -264,6 +327,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-linux-安装-cuda"><span class="nav-text">1. linux 安装 cuda</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Ubuntu18-04安装cuda9-0"><span class="nav-text">2. Ubuntu18.04安装cuda9.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Pytorch-安装慢"><span class="nav-text">3. Pytorch 安装慢</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-cannot-import-‘PILLOW-VERSION’"><span class="nav-text">4. cannot import ‘PILLOW_VERSION’</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-PyTorch-no-longer-supports-this-GPU-because-it-is-too-old"><span class="nav-text">5. PyTorch no longer supports this GPU because it is too old.</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
