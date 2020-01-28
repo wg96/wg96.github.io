@@ -48,20 +48,22 @@
   };
 </script>
 
-  <meta name="description" content="1. Ubuntu时间和Windows不一致解决办法：在Ubuntu中把计算机硬件时间改成系统显示的时间，即禁用Ubuntu的UTC：（需要重启） 1timedatectl set-local-rtc 1 –adjust-system-clock 具体参见 解决Windows10与Ubuntu16.04双系统时间不一样问题">
+  <meta name="description" content="题目Given an array of integers, return indices of the two numbers such that they add up to a specific target. You may assume that each input would have exactly one solution, and you may not use the same">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安装 Ubuntu 18.04">
-<meta property="og:url" content="http://yoursite.com/2020/01/18/Install_Ubuntu_18.04/index.html">
+<meta property="og:title" content="0001 Two Sum -- easy">
+<meta property="og:url" content="http://yoursite.com/2020/01/28/two-sum/index.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="1. Ubuntu时间和Windows不一致解决办法：在Ubuntu中把计算机硬件时间改成系统显示的时间，即禁用Ubuntu的UTC：（需要重启） 1timedatectl set-local-rtc 1 –adjust-system-clock 具体参见 解决Windows10与Ubuntu16.04双系统时间不一样问题">
+<meta property="og:description" content="题目Given an array of integers, return indices of the two numbers such that they add up to a specific target. You may assume that each input would have exactly one solution, and you may not use the same">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-18T15:35:01.829Z">
-<meta property="article:modified_time" content="2020-01-19T13:46:55.577Z">
+<meta property="article:published_time" content="2020-01-28T06:57:55.000Z">
+<meta property="article:modified_time" content="2020-01-28T07:05:08.603Z">
 <meta property="article:author" content="Z. Wang">
-<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Algorithm">
+<meta property="article:tag" content="Array">
+<meta property="article:tag" content="Hash Table">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2020/01/18/Install_Ubuntu_18.04/">
+<link rel="canonical" href="http://yoursite.com/2020/01/28/two-sum/">
 
 
 <script id="page-configurations">
@@ -73,7 +75,7 @@
   };
 </script>
 
-  <title>安装 Ubuntu 18.04 | Blog</title>
+  <title>0001 Two Sum -- easy | Blog</title>
   
 
 
@@ -178,7 +180,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/18/Install_Ubuntu_18.04/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/28/two-sum/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.png">
@@ -191,7 +193,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          安装 Ubuntu 18.04
+          0001 Two Sum -- easy
         </h1>
 
         <div class="post-meta">
@@ -200,24 +202,18 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-01-18 23:35:01" itemprop="dateCreated datePublished" datetime="2020-01-18T23:35:01+08:00">2020-01-18</time>
+              <time title="创建时间：2020-01-28 14:57:55 / 修改时间：15:05:08" itemprop="dateCreated datePublished" datetime="2020-01-28T14:57:55+08:00">2020-01-28</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-19 21:46:55" itemprop="dateModified" datetime="2020-01-19T21:46:55+08:00">2020-01-19</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithm</span>
                   </a>
                 </span>
             </span>
@@ -233,25 +229,34 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="1-Ubuntu时间和Windows不一致"><a href="#1-Ubuntu时间和Windows不一致" class="headerlink" title="1. Ubuntu时间和Windows不一致"></a>1. Ubuntu时间和Windows不一致</h2><p><strong>解决办法：</strong>在Ubuntu中把计算机硬件时间改成系统显示的时间，即禁用Ubuntu的UTC：（需要重启）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timedatectl set-local-rtc 1 –adjust-system-clock</span><br></pre></td></tr></table></figure>
-<p>具体参见 <a href="https://blog.csdn.net/zyqblog/article/details/79318955#%E6%9C%80%E7%BB%88%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%88%90%E5%8A%9F" target="_blank" rel="noopener">解决Windows10与Ubuntu16.04双系统时间不一样问题</a></p>
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>Given an array of integers, return <strong>indices</strong> of the two numbers such that they add up to a specific target.</p>
+<p>You may assume that each input would have <strong><em>exactly</em></strong> one solution, and you may not use the <em>same</em> element twice.</p>
 <a id="more"></a>
-<h2 id="2-更新-apt-get"><a href="#2-更新-apt-get" class="headerlink" title="2. 更新 apt-get"></a>2. 更新 apt-get</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
-<h2 id="3-安装-vim"><a href="#3-安装-vim" class="headerlink" title="3. 安装 vim"></a>3. 安装 vim</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install vim</span><br></pre></td></tr></table></figure>
-<h2 id="4-安装-Nvidia-驱动"><a href="#4-安装-Nvidia-驱动" class="headerlink" title="4. 安装 Nvidia 驱动"></a>4. 安装 Nvidia 驱动</h2><ul>
-<li>干掉 nouveau</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;etc&#x2F;modprobe.d&#x2F;                                                 # 进入对应文件夹</span><br><span class="line">sudo vim blacklist-nouveau.conf</span><br></pre></td></tr></table></figure>
-<p>添加如下内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">blacklist nouveau options nouveau modeset&#x3D;0</span><br></pre></td></tr></table></figure>
-<p>重置内核引导</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo update-initramfs -u</span><br></pre></td></tr></table></figure>
-<p>重启</p>
+<p>Example:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Given nums &#x3D; [2, 7, 11, 15], target &#x3D; 9,</span><br><span class="line"></span><br><span class="line">Because nums[0] + nums[1] &#x3D; 2 + 7 &#x3D; 9,</span><br><span class="line">return [0, 1].</span><br></pre></td></tr></table></figure>
+<h2 id="第一遍解答"><a href="#第一遍解答" class="headerlink" title="第一遍解答"></a>第一遍解答</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Runtime: 6976 ms</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">twoSum</span><span class="params">(self, nums: List[int], target: int)</span> -&gt; List[int]:</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(nums)<span class="number">-1</span>):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i+<span class="number">1</span>, len(nums)):</span><br><span class="line">                <span class="keyword">if</span> nums[i] + nums[j] == target:</span><br><span class="line">                    newArr = [i, j]</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">return</span> newArr</span><br></pre></td></tr></table></figure>
+<p>分析：这是暴力算法，搜寻所有可能的数对。</p>
 <ul>
-<li>安装 Nvidia 驱动</li>
+<li><p>Time complexity : $O(n^2)$. For each element, we try to find its complement by looping through the rest of array which takes $O(n)$ time. Therefore, the time complexity is $O(n^2)$.</p>
+</li>
+<li><p>Space complexity : $O(1)$. </p>
+</li>
 </ul>
-<p>软件和更新 —&gt; 附加驱动</p>
+<h2 id="使用查找表来解决该问题："><a href="#使用查找表来解决该问题：" class="headerlink" title="使用查找表来解决该问题："></a>使用查找表来解决该问题：</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Runtime: 76 ms</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">twoSum</span><span class="params">(self, nums: List[int], target: int)</span> -&gt; List[int]:</span></span><br><span class="line">        d = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> i, n <span class="keyword">in</span> enumerate(nums):</span><br><span class="line">            m = target - n</span><br><span class="line">            <span class="keyword">if</span> m <span class="keyword">in</span> d:</span><br><span class="line">                <span class="keyword">return</span> [d[m], i]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                d[n] = i</span><br></pre></td></tr></table></figure>
+<h2 id="更加精简的版本"><a href="#更加精简的版本" class="headerlink" title="更加精简的版本"></a>更加精简的版本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Runtime: 40 ms</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">twoSum</span><span class="params">(self, nums: List[int], target: int)</span> -&gt; List[int]:</span></span><br><span class="line">        d = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> i, n <span class="keyword">in</span> enumerate(nums):</span><br><span class="line">            <span class="keyword">if</span> n <span class="keyword">in</span> d:</span><br><span class="line">                <span class="keyword">return</span> [d[n], i]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                d[target - n] = i</span><br></pre></td></tr></table></figure>
+<p>解释：以 <code>nums = [2, 11, 7, 15]</code>， <code>target = 9</code> 为例</p>
+<ul>
+<li>第 0 个数：2，为了使 sum = 9，它想要的数是 7， 存入字典 d，d = {7: 0}</li>
+<li>第 1 个数：11，字典 d 里面没有想要它的。11 想要的数字是 -2，把 -2 存入字典 d，d = {7: 0, -2: 1}</li>
+<li>第 2 个数：7，在字典 d 中！返回下标 [d[7], 2]，即 [0, 2]</li>
+</ul>
+<p>总的来说，字典 d 就是 num 中各个数的愿望清单，如果新读进来的数位于 d 中，则配对成功。</p>
+<p><strong>复杂度分析</strong></p>
+<ul>
+<li>时间复杂度：由于字典的插入和查询操作的复杂度是 $O(1)$，每读进来一个数，只需要扫描字典一遍。因此，总的时间复杂度是 $O(n)$</li>
+<li>空间复杂度：由于引入了字典，显然，$O(n)$</li>
+</ul>
+<h2 id="进一步学习"><a href="#进一步学习" class="headerlink" title="进一步学习"></a>进一步学习</h2><p>本题主要涉及了一种数据结构——哈希表（Hash table），通过增加空间复杂度来降低时间复杂度。</p>
 
     </div>
 
@@ -261,7 +266,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Algorithm/" rel="tag"># Algorithm</a>
+              <a href="/tags/Array/" rel="tag"># Array</a>
+              <a href="/tags/Hash-Table/" rel="tag"># Hash Table</a>
           </div>
 
         
@@ -269,11 +276,11 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2020/01/19/Ubuntu_Github_Hexo/" rel="next" title="Github 上搭建 Hexo 博客(基于Ubuntu)">
-      Github 上搭建 Hexo 博客(基于Ubuntu) <i class="fa fa-chevron-right"></i>
+    <a href="/2020/01/22/how-to-leetcode/" rel="prev" title="怎么刷 Leetcode?">
+      <i class="fa fa-chevron-left"></i> 怎么刷 Leetcode?
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -333,7 +340,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Ubuntu时间和Windows不一致"><span class="nav-text">1. Ubuntu时间和Windows不一致</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-更新-apt-get"><span class="nav-text">2. 更新 apt-get</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-安装-vim"><span class="nav-text">3. 安装 vim</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-安装-Nvidia-驱动"><span class="nav-text">4. 安装 Nvidia 驱动</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-text">题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一遍解答"><span class="nav-text">第一遍解答</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用查找表来解决该问题："><span class="nav-text">使用查找表来解决该问题：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更加精简的版本"><span class="nav-text">更加精简的版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进一步学习"><span class="nav-text">进一步学习</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
