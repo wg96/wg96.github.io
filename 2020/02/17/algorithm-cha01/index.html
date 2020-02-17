@@ -48,23 +48,25 @@
   };
 </script>
 
-  <meta name="description" content="题目Given a non-negative index $k$ where $k \le 33$, return the $k^{th}$ index row of the Pascal’s triangle. Note that the row index starts from 0.">
+  <meta name="description" content="网络资源Problem Solving with Algorithms and Data Structures using Python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="0119 Pascal&#39;s Triangle II -- easy">
-<meta property="og:url" content="http://yoursite.com/2020/01/30/Pascal-s-Triangle-II/index.html">
+<meta property="og:title" content="《Python数据结构与算法》第一章 导论">
+<meta property="og:url" content="http://yoursite.com/2020/02/17/algorithm-cha01/index.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="题目Given a non-negative index $k$ where $k \le 33$, return the $k^{th}$ index row of the Pascal’s triangle. Note that the row index starts from 0.">
+<meta property="og:description" content="网络资源Problem Solving with Algorithms and Data Structures using Python">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/2020/01/30/Pascal-s-Triangle-II/PascalTriangleAnimated2.gif">
-<meta property="article:published_time" content="2020-01-30T07:57:51.000Z">
-<meta property="article:modified_time" content="2020-01-30T08:01:02.328Z">
+<meta property="og:image" content="http://yoursite.com/2020/02/17/algorithm-cha01/adt.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/17/algorithm-cha01/assignment1.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/17/algorithm-cha01/assignment2.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/17/algorithm-cha01/radd.jpg">
+<meta property="article:published_time" content="2020-02-17T14:59:01.000Z">
+<meta property="article:modified_time" content="2020-02-17T15:12:59.420Z">
 <meta property="article:author" content="Z. Wang">
-<meta property="article:tag" content="Algorithm">
-<meta property="article:tag" content="Array">
+<meta property="article:tag" content="AlgorithmBook">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/01/30/Pascal-s-Triangle-II/PascalTriangleAnimated2.gif">
+<meta name="twitter:image" content="http://yoursite.com/2020/02/17/algorithm-cha01/adt.png">
 
-<link rel="canonical" href="http://yoursite.com/2020/01/30/Pascal-s-Triangle-II/">
+<link rel="canonical" href="http://yoursite.com/2020/02/17/algorithm-cha01/">
 
 
 <script id="page-configurations">
@@ -76,7 +78,7 @@
   };
 </script>
 
-  <title>0119 Pascal's Triangle II -- easy | Blog</title>
+  <title>《Python数据结构与算法》第一章 导论 | Blog</title>
   
 
 
@@ -181,7 +183,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/30/Pascal-s-Triangle-II/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/17/algorithm-cha01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/uploads/avatar.png">
@@ -194,7 +196,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          0119 Pascal's Triangle II -- easy
+          《Python数据结构与算法》第一章 导论
         </h1>
 
         <div class="post-meta">
@@ -205,7 +207,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-01-30 15:57:51 / 修改时间：16:01:02" itemprop="dateCreated datePublished" datetime="2020-01-30T15:57:51+08:00">2020-01-30</time>
+              <time title="创建时间：2020-02-17 22:59:01 / 修改时间：23:12:59" itemprop="dateCreated datePublished" datetime="2020-02-17T22:59:01+08:00">2020-02-17</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -213,8 +215,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
-                    <span itemprop="name">Algorithm</span>
+                  <a href="/categories/AlgorithmBook/" itemprop="url" rel="index">
+                    <span itemprop="name">AlgorithmBook</span>
                   </a>
                 </span>
             </span>
@@ -230,22 +232,106 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>Given a non-negative index $k$ where $k \le 33$, return the $k^{th}$ index row of the Pascal’s triangle.</p>
-<p>Note that the row index starts from 0.</p>
+        <h2 id="网络资源"><a href="#网络资源" class="headerlink" title="网络资源"></a>网络资源</h2><p><a href="https://runestone.academy/runestone/books/published/pythonds/index.html" target="_blank" rel="noopener">Problem Solving with Algorithms and Data Structures using Python</a></p>
 <a id="more"></a>
-<p><img src="/2020/01/30/Pascal-s-Triangle-II/PascalTriangleAnimated2.gif" alt="pascal"></p>
-<p>In Pascal’s triangle, each number is the sum of the two numbers directly above it.</p>
-<p><strong>Example:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input: 3</span><br><span class="line">Output: [1,3,3,1]</span><br></pre></td></tr></table></figure>
-<p><strong>Follow up:</strong></p>
-<p>Could you optimize your algorithm to use only $O(k)$ extra space?</p>
-<h2 id="自己写的"><a href="#自己写的" class="headerlink" title="自己写的"></a>自己写的</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getRow</span><span class="params">(self, rowIndex: int)</span> -&gt; List[int]:</span></span><br><span class="line">        row = [<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(rowIndex):</span><br><span class="line">            row = list(map(<span class="keyword">lambda</span> x, y: x+y, row + [<span class="number">0</span>], [<span class="number">0</span>] + row))</span><br><span class="line">        <span class="keyword">return</span> row</span><br></pre></td></tr></table></figure>
-<p>采用 0118 Pascal’s Triangle 中最后一种方法，使用 map() 函数，空间复杂度可以降低到 $O(k)$ 。</p>
-<h2 id="more-“pythonic”-solution"><a href="#more-“pythonic”-solution" class="headerlink" title="more “pythonic” solution"></a>more “pythonic” solution</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getRow</span><span class="params">(self, rowIndex: int)</span> -&gt; List[int]:</span></span><br><span class="line">        row = [<span class="number">1</span>]</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(rowIndex):</span><br><span class="line">            row = [x + y <span class="keyword">for</span> x, y <span class="keyword">in</span> zip(row + [<span class="number">0</span>], [<span class="number">0</span>] + row)]</span><br><span class="line">        <span class="keyword">return</span> row</span><br></pre></td></tr></table></figure>
-<p>这段代码和自己写的是等价的，但是没有使用 map() 函数，更加 “pythonic” 。</p>
-<h2 id="传统方法"><a href="#传统方法" class="headerlink" title="传统方法"></a>传统方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getRow</span><span class="params">(self, rowIndex: int)</span> -&gt; List[int]:</span></span><br><span class="line">        row = [<span class="number">1</span>]*(rowIndex+<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, rowIndex):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i):</span><br><span class="line">                row[i-j] += row[i-j<span class="number">-1</span>]</span><br><span class="line">        <span class="keyword">return</span> row</span><br></pre></td></tr></table></figure>
-<p>找个例子手算一遍即可理解代码，比如：当 $k=4$ 时，$row=[1,\ 4,\ 6,\ 4,\ 1]$ 。</p>
-<h2 id="新知识"><a href="#新知识" class="headerlink" title="新知识"></a>新知识</h2><p><a href="https://www.runoob.com/python3/python3-func-zip.html" target="_blank" rel="noopener">zip() 函数</a></p>
+<h2 id="计算机科学"><a href="#计算机科学" class="headerlink" title="计算机科学"></a>计算机科学</h2><h3 id="可计算"><a href="#可计算" class="headerlink" title="可计算"></a>可计算</h3><p>若存在能够解决某个问题的算法，那么该问题便是可计算的。</p>
+<h3 id="计算机科学-1"><a href="#计算机科学-1" class="headerlink" title="计算机科学"></a>计算机科学</h3><p>研究问题及其 解决方案（即算法），以及研究目前无解的问题的学科。也可以定义为研究可计算以及不可计算的问题，即研究算法的存在性以及不存在性。</p>
+<p><strong>注意：</strong>计算机科学的定义中均未出现 “计算机” 一词，解决方案本身独立于计算机。</p>
+<h3 id="接口-Interface"><a href="#接口-Interface" class="headerlink" title="接口(Interface)"></a>接口(Interface)</h3><p>用户用于与底层复杂的实现进行交互的方式。</p>
+<h3 id="抽象"><a href="#抽象" class="headerlink" title="抽象"></a>抽象</h3><ul>
+<li><p><strong>过程抽象</strong></p>
+<p>将功能的实现细节隐藏，从而用户能从更高的视角来看待功能。比如：sqrt() 函数。</p>
+</li>
+<li><p><strong>数据抽象</strong></p>
+<p><strong>抽象数据类型（abstract data type, ADT）</strong> 从逻辑上描述了如何看待数据及其对应运算而无需考虑具体实现。</p>
+<p><img src="/2020/02/17/algorithm-cha01/adt.png" alt="adt"></p>
+<p>球的外壳就是抽象数据类型，包括接口和操作。球核的实现就是数据结构，需要通过编程语言的语法结构和原生数据类型来看待数据。</p>
+</li>
+</ul>
+<h2 id="如何学习算法？"><a href="#如何学习算法？" class="headerlink" title="如何学习算法？"></a>如何学习算法？</h2><p>计算机科学家通过经验来学习：</p>
+<ul>
+<li>观察他人如何解决问题，然后亲自解决问题</li>
+<li>接触各种问题解决技巧并学习不同算法的设计方法，有助于解决新的问题</li>
+<li>通过学习一系列不同的算法，可以举一反三，从而在遇到类似的问题时，能够快速加以解决</li>
+</ul>
+<h2 id="Python-基础"><a href="#Python-基础" class="headerlink" title="Python 基础"></a>Python 基础</h2><h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><ul>
+<li><strong>原子数据类型</strong></li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>class name</th>
+<th>类型</th>
+<th>运算符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int class</td>
+<td>整数</td>
+<td>标准的数学运算符：+, -, <em>, /, *</em>（幂）, %(取余), //(地板除)</td>
+</tr>
+<tr>
+<td>float class</td>
+<td>浮点数</td>
+<td>和 int 运算符一样</td>
+</tr>
+<tr>
+<td>bool class</td>
+<td>布尔型</td>
+<td>逻辑运算符：and, or, not</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>  <strong>变量</strong> 存的是指向数据的 <em>引用</em>，而不是数据本身。</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theSum = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>  <img src="/2020/02/17/algorithm-cha01/assignment1.png" alt="assignment1"></p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theSum = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>  <img src="/2020/02/17/algorithm-cha01/assignment2.png" alt="assignment2"></p>
+<p>  赋值语句改变了变量的引用，这体现了 Python 的动态特性。同样的变量可以指向许多不同类型的数据。</p>
+<ul>
+<li><p><strong>集合数据类型</strong></p>
+<p>见书</p>
+</li>
+</ul>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p><strong>例</strong> 写一个求平方根的程序。</p>
+<ul>
+<li>回顾牛顿迭代法</li>
+</ul>
+<p>求解方程 $f(x)=0$，对 $f(x)$ 做 Taylor 展开：</p>
+<script type="math/tex; mode=display">
+f(x)=f(x^{(k)})+f'(x^{(k)})(x-x^{(k)})+O(x^2)=0</script><p>丢掉 $O(x^2)$，可得牛顿法迭代公式：</p>
+<script type="math/tex; mode=display">
+f(x^{(k+1)})=x^{(k)}-\frac{f(x^{(k)})}{f'(x^{(k)})}</script><p>求 $a$ 的平方根，就是求 $x^2=a$，即 $f(x)=x^2-a=0$，可得求解平方根的迭代公式：</p>
+<script type="math/tex; mode=display">
+x^{(k+1)}=\frac{1}{2}(x^{(k)}+\frac{a}{x^{(k)}})</script><ul>
+<li>代码</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">squareroot</span><span class="params">(n)</span>:</span></span><br><span class="line">    root = n/<span class="number">2</span> <span class="comment"># initial guess will be 1/2 of n</span></span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">20</span>):</span><br><span class="line">        root = (<span class="number">1</span>/<span class="number">2</span>) * (root + (n/root))</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h3 id="定义类"><a href="#定义类" class="headerlink" title="定义类"></a>定义类</h3><p>当需要实现一个新的抽象数据类型时，就可以创建新类。</p>
+<p><strong>例1</strong> 自定义分数（Fraction）类</p>
+<ul>
+<li><p><strong>要求</strong></p>
+<ul>
+<li>分子是任意整数，分母是任意正整数。</li>
+<li>实现分数的加、减、乘、除等运算。</li>
+<li>打印效果如：3/5</li>
+<li>所有的分数方法都应当返回最简形式。</li>
+</ul>
+</li>
+<li><p><strong>注意</strong></p>
+<ul>
+<li><p>辗转相除法的实现要求分母为正，代码的 构造方法 部分已考虑到了这一点</p>
+</li>
+<li><p>右加 _<em>radd_</em></p>
+<p><img src="/2020/02/17/algorithm-cha01/radd.jpg" alt></p>
+<p>参考：<a href="https://blog.csdn.net/u011019726/article/details/77834602" target="_blank" rel="noopener">python _<em>add_<em>和__radd</em></em></a></p>
+</li>
+</ul>
+</li>
+</ul>
 
     </div>
 
@@ -255,8 +341,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Algorithm/" rel="tag"># Algorithm</a>
-              <a href="/tags/Array/" rel="tag"># Array</a>
+              <a href="/tags/AlgorithmBook/" rel="tag"># AlgorithmBook</a>
           </div>
 
         
@@ -265,13 +350,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/01/29/Pascal-s-Triangle/" rel="prev" title="0118 Pascal's Triangle -- easy">
-      <i class="fa fa-chevron-left"></i> 0118 Pascal's Triangle -- easy
+    <a href="/2020/01/30/Pascal-s-Triangle-II/" rel="prev" title="0119 Pascal's Triangle II -- easy">
+      <i class="fa fa-chevron-left"></i> 0119 Pascal's Triangle II -- easy
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/02/17/algorithm-cha01/" rel="next" title="《Python数据结构与算法》第一章 导论">
-      《Python数据结构与算法》第一章 导论 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -331,7 +413,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-text">题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自己写的"><span class="nav-text">自己写的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#more-“pythonic”-solution"><span class="nav-text">more “pythonic” solution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传统方法"><span class="nav-text">传统方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新知识"><span class="nav-text">新知识</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络资源"><span class="nav-text">网络资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算机科学"><span class="nav-text">计算机科学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可计算"><span class="nav-text">可计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计算机科学-1"><span class="nav-text">计算机科学</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口-Interface"><span class="nav-text">接口(Interface)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象"><span class="nav-text">抽象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何学习算法？"><span class="nav-text">如何学习算法？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-基础"><span class="nav-text">Python 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据"><span class="nav-text">数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-text">函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义类"><span class="nav-text">定义类</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
