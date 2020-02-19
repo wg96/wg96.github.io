@@ -48,15 +48,22 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Blog">
-<meta property="og:url" content="http://yoursite.com/categories/Deep-learning/index.html">
+  <meta name="description" content="基线条件和递归条件每个递归函数都有两部分：基线条件（base case）和递归条件（recursive case）。  递归条件：函数调用自己 基线条件：函数不再调用自己，从而避免形成无限循环">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《算法图解》第三章 递归">
+<meta property="og:url" content="http://yoursite.com/2020/02/19/GA-02/index.html">
 <meta property="og:site_name" content="Blog">
+<meta property="og:description" content="基线条件和递归条件每个递归函数都有两部分：基线条件（base case）和递归条件（recursive case）。  递归条件：函数调用自己 基线条件：函数不再调用自己，从而避免形成无限循环">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/02/19/GA-02/greetfunction.jpg">
+<meta property="article:published_time" content="2020-02-19T09:22:57.000Z">
+<meta property="article:modified_time" content="2020-02-19T09:27:05.582Z">
 <meta property="article:author" content="Z. Wang">
+<meta property="article:tag" content="AlgorithmBook">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/02/19/GA-02/greetfunction.jpg">
 
-<link rel="canonical" href="http://yoursite.com/categories/Deep-learning/">
+<link rel="canonical" href="http://yoursite.com/2020/02/19/GA-02/">
 
 
 <script id="page-configurations">
@@ -64,11 +71,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>分类: Deep learning | Blog</title>
+  <title>《算法图解》第三章 递归 | Blog</title>
   
 
 
@@ -168,50 +175,127 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h1 class="collection-header">Deep learning
-          <small>分类</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/19/GA-02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Z. Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《算法图解》第三章 递归
         </h1>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-02-19 17:22:57 / 修改时间：17:27:05" itemprop="dateCreated datePublished" datetime="2020-02-19T17:22:57+08:00">2020-02-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AlgorithmBook/" itemprop="url" rel="index">
+                    <span itemprop="name">AlgorithmBook</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AlgorithmBook/%E7%AE%97%E6%B3%95%E5%9B%BE%E8%A7%A3/" itemprop="url" rel="index">
+                    <span itemprop="name">算法图解</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2020</h1>
+        <h2 id="基线条件和递归条件"><a href="#基线条件和递归条件" class="headerlink" title="基线条件和递归条件"></a>基线条件和递归条件</h2><p>每个递归函数都有两部分：<strong>基线条件（base case）</strong>和<strong>递归条件（recursive case）</strong>。</p>
+<ul>
+<li>递归条件：函数调用自己</li>
+<li>基线条件：函数不再调用自己，从而避免形成无限循环</li>
+</ul>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">countdown</span><span class="params">(i)</span>:</span></span><br><span class="line">    print(i)</span><br><span class="line">    <span class="keyword">if</span> i &lt;= <span class="number">1</span>:       <span class="comment"># 基线条件</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">else</span>:            <span class="comment"># 递归条件</span></span><br><span class="line">        countdown(i<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><p>栈的两种操作：（类似与一个箱子）</p>
+<ul>
+<li>压入（插入）：在栈的顶层添加</li>
+<li>弹出（删除并读取）：删除并阅读栈的顶层</li>
+</ul>
+<h2 id="调用栈"><a href="#调用栈" class="headerlink" title="调用栈"></a>调用栈</h2><p><strong>调用栈（call stack）</strong>是用于存储多个函数的变量的栈。所有函数调用都进入调用栈。</p>
+<p><strong>练习 3.1</strong> 根据下面的调用栈，你可获得哪些信息？</p>
+<p><img src="/2020/02/19/GA-02/greetfunction.jpg" alt></p>
+<p><strong>解</strong>：Here are some things you could tell me:</p>
+<ul>
+<li>The greet function is called first, with name = maggie.</li>
+<li>Then the greet function calls the greet2 function, with name = maggie.</li>
+<li>At this point, the greet function is in an incomplete, suspended state.</li>
+<li>The current function call is the greet2 function.</li>
+<li>After this function call completes, the greet function will resume.</li>
+</ul>
+<h2 id="递归调用栈"><a href="#递归调用栈" class="headerlink" title="递归调用栈"></a>递归调用栈</h2><p>使用栈虽然很方便，但是也要付出代价：存储详尽的信息可能占用大量的内存。每个函数调用都需占用一定的内存，如果栈很高，就意味着计算机存储了大量函数调用信息。在这种情况下，有两种选择：</p>
+<ul>
+<li>重新编写代码，使用循环</li>
+<li>使用<strong>尾递归</strong></li>
+</ul>
+<p><strong>练习3.2</strong> 假设你编写了一个递归函数，但不小心导致它没完没了地运行。正如你看到的，对于每次函数调用，计算机都将为其在栈中分配内存。递归函数没完没了地运行时，将给栈带来什么影响？</p>
+<p><strong>答</strong> The stack grows forever. Each program has a limited amount of space on  the call stack. When your program runs out of space (which it eventually will), it will exit with a stack-overflow error. </p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-01-21T14:25:33+08:00"
-              content="2020-01-21">
-          01-21
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AlgorithmBook/" rel="tag"># AlgorithmBook</a>
+          </div>
 
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/01/21/install-pytorch/" itemprop="url">
-            <span itemprop="name">安装 pytorch 的一些尝试</span>
-          </a>
-      </h2>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/19/how-to-google/" rel="prev" title="如何加入Google？">
+      <i class="fa fa-chevron-left"></i> 如何加入Google？
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
@@ -262,6 +346,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基线条件和递归条件"><span class="nav-text">基线条件和递归条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#栈"><span class="nav-text">栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调用栈"><span class="nav-text">调用栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#递归调用栈"><span class="nav-text">递归调用栈</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
