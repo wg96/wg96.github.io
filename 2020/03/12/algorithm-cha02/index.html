@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="一、何谓算法分析算法分析从计算资源的角度来比较算法。说A算法比B算法好，依据是A算法有更高的资源利用率或使用更少的资源。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Python数据结构与算法》第二章 算法分析">
+<meta property="og:url" content="http://yoursite.com/2020/03/12/algorithm-cha02/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="一、何谓算法分析算法分析从计算资源的角度来比较算法。说A算法比B算法好，依据是A算法有更高的资源利用率或使用更少的资源。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-12T08:37:04.000Z">
+<meta property="article:modified_time" content="2020-03-12T08:43:11.347Z">
+<meta property="article:author" content="Z. Wang">
+<meta property="article:tag" content="AlgorithmBook">
+<meta property="article:tag" content="Python数据结构与算法">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/12/algorithm-cha02/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>《Python数据结构与算法》第二章 算法分析 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/12/algorithm-cha02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Z. Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Python数据结构与算法》第二章 算法分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-12 16:37:04 / 修改时间：16:43:11" itemprop="dateCreated datePublished" datetime="2020-03-12T16:37:04+08:00">2020-03-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AlgorithmBook/" itemprop="url" rel="index">
+                    <span itemprop="name">AlgorithmBook</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AlgorithmBook/Python%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">Python数据结构与算法</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、何谓算法分析"><a href="#一、何谓算法分析" class="headerlink" title="一、何谓算法分析"></a>一、何谓算法分析</h2><p><strong>算法分析</strong>从<em>计算资源</em>的角度来比较算法。说A算法比B算法好，依据是A算法有更高的资源利用率或使用更少的资源。</p>
+<a id="more"></a>
+<h3 id="1-1-什么是计算资源"><a href="#1-1-什么是计算资源" class="headerlink" title="1.1 什么是计算资源"></a>1.1 什么是计算资源</h3><ul>
+<li>空间</li>
+</ul>
+<p>考虑算法在解决问题时要占用的空间或内存。所需空间总量一般由问题本身决定，但算法也会有特定的空间需求。</p>
+<ul>
+<li>时间</li>
+</ul>
+<p>考虑算法执行所需的时间。该指标称作算法的<strong>执行时间</strong>或<strong>运行时间</strong>。</p>
+<h3 id="1-2-基准分析"><a href="#1-2-基准分析" class="headerlink" title="1.2 基准分析"></a>1.2 基准分析</h3><p><strong>基准分析</strong>：记录程序计算出结果所消耗的实际时间。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 求和，使用循环</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sumOfN</span><span class="params">(n)</span>:</span></span><br><span class="line">    start = time.time()</span><br><span class="line">    </span><br><span class="line">    theSum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">        theSum += i</span><br><span class="line">    </span><br><span class="line">    end = time.time()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> theSum, end-start</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">    print(<span class="string">'Sum is %d required %10.7f seconds'</span> % sumOfN(<span class="number">10000</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>Sum is 50005000 required  0.0009029 seconds
+Sum is 50005000 required  0.0008707 seconds
+Sum is 50005000 required  0.0007441 seconds
+Sum is 50005000 required  0.0004506 seconds
+Sum is 50005000 required  0.0007296 seconds
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">    print(<span class="string">'Sum is %d required %10.7f seconds'</span> % sumOfN(<span class="number">100000</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>Sum is 5000050000 required  0.0126922 seconds
+Sum is 5000050000 required  0.0125666 seconds
+Sum is 5000050000 required  0.0126736 seconds
+Sum is 5000050000 required  0.0124407 seconds
+Sum is 5000050000 required  0.0129550 seconds
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 求和，使用求和公式</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sumOfN2</span><span class="params">(n)</span>:</span></span><br><span class="line">    start = time.time()</span><br><span class="line">    theSum = n*(n+<span class="number">1</span>)/<span class="number">2</span></span><br><span class="line">    end = time.time()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> theSum, end-start</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n = <span class="number">10000</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">    n = n*<span class="number">10</span></span><br><span class="line">    print(<span class="string">'Sum is %d required %10.7f seconds'</span> % sumOfN2(n))</span><br></pre></td></tr></table></figure>
+<pre><code>Sum is 5000050000 required  0.0000010 seconds
+Sum is 500000500000 required  0.0000010 seconds
+Sum is 50000005000000 required  0.0000007 seconds
+Sum is 5000000050000000 required  0.0000014 seconds
+Sum is 500000000500000000 required  0.0000010 seconds
+</code></pre><p>从基准测试的结果来看，使用求和公式的耗时更少，并且，不管 $n$ 取什么值，耗时都很稳定。</p>
+<p>不过，如果在另一台计算机上运行这个函数，或使用另一种编程语言来实现，很可能会得到不同的结果。如果计算机再旧些，sumOfN2 的执行时间甚至更长。</p>
+<p>基准测试计算的是执行算法的实际时间。这不是一个有用的指标，因为它依赖于特定的计算机、程序、时间、编译器与编程语言。我们希望找到一个独立与程序或计算机的指标。这样的指标在评价算法方面会更有用，可以用来比较不同实现下的算法。</p>
+<h3 id="1-3-大-O-记法"><a href="#1-3-大-O-记法" class="headerlink" title="1.3 大 $O$ 记法"></a>1.3 大 $O$ 记法</h3><p>如果将每一步看成基本计算单位，那么可以将算法的执行时间描述成解决问题所需的步骤数。</p>
+<p>随着问题规模的增长，精确的步骤数 $T(n)$ 的某一部分会比其余部分增长更快。最后比较的是起决定性作用的部分。<strong>数量级函数</strong>描述的就是，当 $n$ 增长时，$T(n)$ 增长最快的部分。</p>
+<p><strong>数量级（order of magnitude）</strong>常称作<strong>大 $O$ 记法</strong>，记作 $O(f(n))$。大 $O$ 记法是 $T(n)$ 非常有用的近似。大 $O$ 函数 $f(n)$ 是 $T(n)$ 中起决定性作用的部分的简单表示。常见的大 $O$ 函数有：$1$，$\log{}n$，$n$，$n\log{}n$，$n^2$，$n^3$，$2^n$。</p>
+<h3 id="1-4-异序词检测示例"><a href="#1-4-异序词检测示例" class="headerlink" title="1.4 异序词检测示例"></a>1.4 异序词检测示例</h3><p>如果一个字符串是另一个字符串的重排，那么这个字符串就算另一个的<strong>异序词</strong>。</p>
+<ul>
+<li><strong>方案1：清点法</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">anagramSolution</span><span class="params">(s1, s2)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> len(s1) != len(s2):</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 字符串不可修改，故转换成列表</span></span><br><span class="line">    alist = list(s2)</span><br><span class="line">    </span><br><span class="line">    pos1 = <span class="number">0</span></span><br><span class="line">    stillOK = <span class="literal">True</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> pos1 &lt; len(s1) <span class="keyword">and</span> stillOK:</span><br><span class="line">        pos2 = <span class="number">0</span></span><br><span class="line">        found = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">while</span> pos2 &lt; len(alist) <span class="keyword">and</span> <span class="keyword">not</span> found:</span><br><span class="line">            <span class="keyword">if</span> s1[pos1] == alist[pos2]:</span><br><span class="line">                found = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                pos2 += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">if</span> found:</span><br><span class="line">            alist[pos2] = <span class="literal">None</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            stillOK = <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">        pos1 += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> stillOK</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">anagramSolution(<span class="string">'earth'</span>, <span class="string">'heart'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>True
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">anagramSolution2(<span class="string">'abc'</span>, <span class="string">'cbc'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>False
+</code></pre><p>时间复杂度：$O(n^2)$</p>
+<ul>
+<li><strong>方案2：排序法</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">anagramSolution2</span><span class="params">(s1, s2)</span>:</span></span><br><span class="line">    alist1 = list(s1)</span><br><span class="line">    alist2 = list(s2)</span><br><span class="line">    </span><br><span class="line">    alist1.sort()</span><br><span class="line">    alist2.sort()</span><br><span class="line">    </span><br><span class="line">    pos = <span class="number">0</span></span><br><span class="line">    matches = <span class="literal">True</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> pos &lt; len(s1) <span class="keyword">and</span> matches:</span><br><span class="line">        <span class="keyword">if</span> alist1[pos] == alist2[pos]:</span><br><span class="line">            pos += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            matches = <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">    <span class="keyword">return</span> matches</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">anagramSolution2(<span class="string">'earth'</span>, <span class="string">'heart'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>True
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">anagramSolution2(<span class="string">'abc'</span>, <span class="string">'cbc'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>False
+</code></pre><p>时间复杂度：主要取决于排序操作。排序的时间复杂度基本上是 $O(n^2)$ 或 $O(n\log{}n)$。</p>
+<ul>
+<li><strong>方案3：记数法</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">anagramSolution3</span><span class="params">(s1, s2)</span>:</span></span><br><span class="line">    c1 = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">    c2 = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s1)):</span><br><span class="line">        pos = ord(s1[i]) - ord(<span class="string">'a'</span>) <span class="comment"># ord('a'):返回'a'对应的整数</span></span><br><span class="line">        c1[pos] += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(s2)):</span><br><span class="line">        pos = ord(s1[i]) - ord(<span class="string">'a'</span>)</span><br><span class="line">        c2[pos] += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    j = <span class="number">0</span></span><br><span class="line">    stillOK = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">while</span> j &lt; <span class="number">26</span> <span class="keyword">and</span> stillOK:</span><br><span class="line">        <span class="keyword">if</span> c1[j] == c2[j]:</span><br><span class="line">            j += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            stillOK = <span class="literal">False</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> stillOK</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">anagramSolution(<span class="string">'earth'</span>, <span class="string">'heart'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>True
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">anagramSolution2(<span class="string">'abc'</span>, <span class="string">'cbc'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>False
+</code></pre><p>时间复杂度：$O(n)$，以空间换时间。</p>
+<h2 id="二、Python数据结构的性能"><a href="#二、Python数据结构的性能" class="headerlink" title="二、Python数据结构的性能"></a>二、Python数据结构的性能</h2><h3 id="2-1-列表"><a href="#2-1-列表" class="headerlink" title="2.1 列表"></a>2.1 列表</h3><p>列表的两个常见操作：</p>
+<ul>
+<li><strong>索引，给某个位置赋值</strong><br>常数阶，与列表长度无关。</li>
+<li><strong>加长列表</strong><ul>
+<li><strong>连接操作</strong><br>[] + []，复杂度：$O(k)$，其中 $k$ 是待链接的列表的长度</li>
+<li><strong>追加方法</strong><br>append()，复杂度：$O(1)$</li>
+</ul>
+</li>
+</ul>
+<p><strong>实验一：加长列表</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test1</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">'''连接操作'''</span></span><br><span class="line">    l = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000</span>):</span><br><span class="line">        l = l + [i]</span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test2</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">'''追加方法'''</span></span><br><span class="line">    l = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000</span>):</span><br><span class="line">        l.append(i)</span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test3</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">'''列表解析式'''</span></span><br><span class="line">    l = [i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000</span>)]</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test4</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">'''用列表构造器调用range函数'''</span></span><br><span class="line">    l = list(range(<span class="number">1000</span>))</span><br></pre></td></tr></table></figure>
+<p>接下来使用timeit模块统计运行时间</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> timeit</span><br><span class="line"></span><br><span class="line">t1 = timeit.Timer(<span class="string">"test1()"</span>, <span class="string">"from __main__ import test1"</span>)</span><br><span class="line">print(<span class="string">"concat "</span>, t1.timeit(number=<span class="number">1000</span>), <span class="string">"milliseconds"</span>)</span><br><span class="line"></span><br><span class="line">t2 = timeit.Timer(<span class="string">"test2()"</span>, <span class="string">"from __main__ import test2"</span>)</span><br><span class="line">print(<span class="string">"append "</span>, t2.timeit(number=<span class="number">1000</span>), <span class="string">"milliseconds"</span>)</span><br><span class="line"></span><br><span class="line">t3 = timeit.Timer(<span class="string">"test3()"</span>, <span class="string">"from __main__ import test3"</span>)</span><br><span class="line">print(<span class="string">"comprehension "</span>, t3.timeit(number=<span class="number">1000</span>), <span class="string">"milliseconds"</span>)</span><br><span class="line"></span><br><span class="line">t4 = timeit.Timer(<span class="string">"test4()"</span>, <span class="string">"from __main__ import test4"</span>)</span><br><span class="line">print(<span class="string">"list range "</span>, t4.timeit(number=<span class="number">1000</span>), <span class="string">"milliseconds"</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>concat  1.2184980770007314 milliseconds
+append  0.06195934499919531 milliseconds
+comprehension  0.027519193999978597 milliseconds
+list range  0.012686549000136438 milliseconds
+</code></pre><p>注意：以上的执行时间其实包含了调用测试函数的额外开销。下面测试一下调用空函数的时间。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test5</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">t5 = timeit.Timer(<span class="string">"test5()"</span>, <span class="string">"from __main__ import test5"</span>)</span><br><span class="line">print(<span class="string">"empty "</span>, t5.timeit(number=<span class="number">1000</span>), <span class="string">"milliseconds"</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>empty  0.0001433930001439876 milliseconds
+</code></pre><p><strong>实验二：pop的性能分析</strong></p>
+<p>pop()的复杂度是 $O(1)$，pop(i)的复杂度是 $O(n)$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> timeit</span><br><span class="line"></span><br><span class="line">x = list(range(<span class="number">2000000</span>))</span><br><span class="line"></span><br><span class="line">popzero = timeit.Timer(<span class="string">"x.pop(0)"</span>, <span class="string">"from __main__ import x"</span>)</span><br><span class="line"></span><br><span class="line">popzero.timeit(number=<span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>1.724262693000128
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x = list(range(<span class="number">2000000</span>))</span><br><span class="line"></span><br><span class="line">popend = timeit.Timer(<span class="string">"x.pop()"</span>, <span class="string">"from __main__ import x"</span>)</span><br><span class="line"></span><br><span class="line">popend.timeit(number=<span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>7.073199958540499e-05
+</code></pre><p>以上结果说明pop(0)确实比pop()慢，但并没有证明pop(0)的时间复杂度是 $O((n)$，也没有证明pop()的时间复杂度是 $O(1)$。下面测试两个操作在各个列表长度下的性能：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">popzero = timeit.Timer(<span class="string">"x.pop(0)"</span>, <span class="string">"from __main__ import x"</span>)</span><br><span class="line">popend = timeit.Timer(<span class="string">"x.pop()"</span>, <span class="string">"from __main__ import x"</span>)</span><br><span class="line">print(<span class="string">"pop(0) pop()"</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000000</span>, <span class="number">100000001</span>, <span class="number">1000000</span>):</span><br><span class="line">    x = list(range(i))</span><br><span class="line">    pt = popend.timeit(number=<span class="number">1000</span>)</span><br><span class="line">    x = list(range(i))</span><br><span class="line">    pz = popzero.timeit(number=<span class="number">1000</span>)</span><br><span class="line">    print(<span class="string">"%15.5f, %15.5f"</span> % (pz, pt))</span><br></pre></td></tr></table></figure>
+<pre><code>pop(0) pop()
+        0.85029,         0.00007
+        1.81593,         0.00007
+        2.85823,         0.00007
+        3.50374,         0.00007
+        4.49910,         0.00007
+        5.41634,         0.00007
+        6.13444,         0.00007
+        7.16018,         0.00007
+</code></pre><h3 id="2-2-字典"><a href="#2-2-字典" class="headerlink" title="2.2 字典"></a>2.2 字典</h3><p><strong>实验三：比较列表和字典的包含操作（in）</strong></p>
+<p>验证列表的包含操作是 $O(n)$，而字典的包含操作是 $O(1)$。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> timeit</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10000</span>, <span class="number">1000001</span>, <span class="number">20000</span>):</span><br><span class="line">    <span class="comment"># random.randrange(i)：在范围内随机取一个数</span></span><br><span class="line">    t = timeit.Timer(<span class="string">"random.randrange(%d) in x"</span> % i,</span><br><span class="line">                     <span class="string">"from __main__ import random, x"</span>)</span><br><span class="line">    x = list(range(i))</span><br><span class="line">    lst_time = t.timeit(number=<span class="number">1000</span>)</span><br><span class="line">    x = &#123;j:<span class="literal">None</span> <span class="keyword">for</span> j <span class="keyword">in</span> range(i)&#125;</span><br><span class="line">    d_time = t.timeit(number=<span class="number">1000</span>)</span><br><span class="line">    print(<span class="string">"%d, %10.3f, %10.3f"</span> % (i, lst_time, d_time))</span><br></pre></td></tr></table></figure>
+<pre><code>10000,      0.074,      0.001
+30000,      0.205,      0.001
+50000,      0.318,      0.002
+70000,      0.448,      0.001
+90000,      0.566,      0.002
+110000,      0.683,      0.001
+130000,      0.829,      0.001
+150000,      1.024,      0.001
+170000,      1.156,      0.001
+190000,      1.252,      0.001
+210000,      1.320,      0.001
+230000,      1.438,      0.001
+250000,      1.544,      0.001
+</code></pre><p>进一步学习，可以参考<a href="https://wiki.python.org/moin/TimeComplexity" target="_blank" rel="noopener">Python的时间复杂度页面</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AlgorithmBook/" rel="tag"># AlgorithmBook</a>
+              <a href="/tags/Python%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag"># Python数据结构与算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/06/GA-08/" rel="prev" title="《算法图解》第8章 贪婪算法">
+      <i class="fa fa-chevron-left"></i> 《算法图解》第8章 贪婪算法
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、何谓算法分析"><span class="nav-text">一、何谓算法分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-什么是计算资源"><span class="nav-text">1.1 什么是计算资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-基准分析"><span class="nav-text">1.2 基准分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-大-O-记法"><span class="nav-text">1.3 大 $O$ 记法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-异序词检测示例"><span class="nav-text">1.4 异序词检测示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Python数据结构的性能"><span class="nav-text">二、Python数据结构的性能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-列表"><span class="nav-text">2.1 列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-字典"><span class="nav-text">2.2 字典</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Z. Wang"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Z. Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Z. Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+</body>
+</html>
