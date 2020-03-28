@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="一、题目给定一个单词列表，我们将这个列表编码成一个索引字符串 S 与一个索引列表 A。 例如，如果这个列表是 [“time”, “me”, “bell”]，我们就可以将其表示为 S &#x3D; “time#bell#” 和 indexes &#x3D; [0, 2, 5]。 对于每一个索引，我们可以通过从字符串 S 中索引的位置开始读取字符串，直到 “#” 结束，来恢复我们之前的单词列表。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="820. 单词的压缩编码">
+<meta property="og:url" content="http://yoursite.com/2020/03/29/lc-820/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="一、题目给定一个单词列表，我们将这个列表编码成一个索引字符串 S 与一个索引列表 A。 例如，如果这个列表是 [“time”, “me”, “bell”]，我们就可以将其表示为 S &#x3D; “time#bell#” 和 indexes &#x3D; [0, 2, 5]。 对于每一个索引，我们可以通过从字符串 S 中索引的位置开始读取字符串，直到 “#” 结束，来恢复我们之前的单词列表。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/03/29/lc-820/trie_1.png">
+<meta property="article:published_time" content="2020-03-28T16:02:21.000Z">
+<meta property="article:modified_time" content="2020-03-28T16:25:24.326Z">
+<meta property="article:author" content="Z. Wang">
+<meta property="article:tag" content="Array">
+<meta property="article:tag" content="Tire tree">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/03/29/lc-820/trie_1.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/29/lc-820/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>820. 单词的压缩编码 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/29/lc-820/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Z. Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          820. 单词的压缩编码
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-29 00:02:21 / 修改时间：00:25:24" itemprop="dateCreated datePublished" datetime="2020-03-29T00:02:21+08:00">2020-03-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithm</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/Leetcode/" itemprop="url" rel="index">
+                    <span itemprop="name">Leetcode</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、题目"><a href="#一、题目" class="headerlink" title="一、题目"></a>一、题目</h2><p>给定一个单词列表，我们将这个列表编码成一个索引字符串 S 与一个索引列表 A。</p>
+<p>例如，如果这个列表是 [“time”, “me”, “bell”]，我们就可以将其表示为 S = “time#bell#” 和 indexes = [0, 2, 5]。</p>
+<p>对于每一个索引，我们可以通过从字符串 S 中索引的位置开始读取字符串，直到 “#” 结束，来恢复我们之前的单词列表。</p>
+<a id="more"></a>
+<p>那么成功对给定单词列表进行编码的最小字符串长度是多少呢？</p>
+<p><strong>示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: words &#x3D; [&quot;time&quot;, &quot;me&quot;, &quot;bell&quot;]</span><br><span class="line">输出: 10</span><br><span class="line">说明: S &#x3D; &quot;time#bell#&quot; ， indexes &#x3D; [0, 2, 5]</span><br></pre></td></tr></table></figure>
+<p><strong>提示</strong></p>
+<ol>
+<li><code>1 &lt;= words.length &lt;= 2000</code></li>
+<li><code>1 &lt;= words[i].length &lt;= 7</code></li>
+<li>每个单词都是小写字母 。</li>
+</ol>
+<h2 id="二、字典树方法之正常走向Pythonic"><a href="#二、字典树方法之正常走向Pythonic" class="headerlink" title="二、字典树方法之正常走向Pythonic"></a>二、字典树方法之正常走向Pythonic</h2><p>用字典树方法求解本问题，有两个关键点：</p>
+<ul>
+<li>创建一棵字典树，把所有word倒叙加入这棵树</li>
+<li>找到所有叶子的高度和</li>
+</ul>
+<h3 id="2-1-最朴素的写法"><a href="#2-1-最朴素的写法" class="headerlink" title="2.1 最朴素的写法"></a>2.1 最朴素的写法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Node 是字典树中的一个节点</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.children = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minimumLengthEncoding</span><span class="params">(self, words: List[str])</span> -&gt; int:</span></span><br><span class="line">        words = list(set(words))</span><br><span class="line">        trie = Node() <span class="comment"># 字典树的头节点</span></span><br><span class="line">        nodes = []    <span class="comment"># nodes 用来存储每个单词对应的最后一个节点</span></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            now = trie</span><br><span class="line">            <span class="keyword">for</span> char <span class="keyword">in</span> reversed(word):</span><br><span class="line">                <span class="keyword">if</span> char <span class="keyword">in</span> now.children:</span><br><span class="line">                    now = now.children[char]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    now.children[char] = Node()</span><br><span class="line">                    now = now.children[char]</span><br><span class="line">            nodes.append(now)</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> word, node <span class="keyword">in</span> zip(words, nodes):</span><br><span class="line">            <span class="keyword">if</span> len(node.children) == <span class="number">0</span>:</span><br><span class="line">                ans += len(word) + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-从-Node-开始简化"><a href="#2-2-从-Node-开始简化" class="headerlink" title="2.2 从 Node() 开始简化"></a>2.2 从 Node() 开始简化</h3><p>从Node开始简化。原先我们把Node声明为一个类，但这个类中只有一个字典，所以我们不如就直接用一个字典来表示节点，一个空字典意味着这是一个叶子节点，否则字典中的每一个元素都是它的一个孩子，上面的代码可以简化为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minimumLengthEncoding</span><span class="params">(self, words: List[str])</span> -&gt; int:</span></span><br><span class="line">        words = list(set(words))</span><br><span class="line">        trie = &#123;&#125;  <span class="comment"># tire树的根节点</span></span><br><span class="line">        nodes = [] <span class="comment"># 用来存储单词的最后一个节点</span></span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            now = trie</span><br><span class="line">            <span class="keyword">for</span> char <span class="keyword">in</span> reversed(word):</span><br><span class="line">                <span class="keyword">if</span> char <span class="keyword">in</span> now:</span><br><span class="line">                    now = now[char]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    now[char] = &#123;&#125;</span><br><span class="line">                    now = now[char]</span><br><span class="line">            nodes.append(now)</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> word, node <span class="keyword">in</span> zip(words, nodes):</span><br><span class="line">            <span class="keyword">if</span> len(node) == <span class="number">0</span>:</span><br><span class="line">                ans += len(word) + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+<h3 id="2-3-使用-defaultdict-进一步简化"><a href="#2-3-使用-defaultdict-进一步简化" class="headerlink" title="2.3 使用 defaultdict 进一步简化"></a>2.3 使用 defaultdict 进一步简化</h3><p>继续简化，我们不想在生成字典树时每次都判断“当前字典有没有这个键”，我们希望，有这个键，就返回它的值，否则返回一个空字典给我。很自然，我们需要用到<code>defaultdict</code>，如果字典的 key 中没有要查找的元素，它默认返回一个空字典。</p>
+<p>但，只返回一个普通字典行吗？ 不行，实际上它需要返回一个defaultdict，且这个defaultdict仍旧会递归地返回defaultdict。于是，递归地，我们定义这样一个函数，它返回一个defaultdict类型，且它的默认值是该类型本身。 <code>Trie = lambda: collections.defaultdict(Trie)</code> ，注意，这里的Trie是一个函数，它返回一个defaultdict实例。有了它，我们创建字典树的过程就变成了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">nodes=[]</span><br><span class="line">Trie = <span class="keyword">lambda</span>: collections.defaultdict(Trie)</span><br><span class="line">trie = Trie()</span><br><span class="line"><span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">    now=trie</span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> word[::<span class="number">-1</span>]:</span><br><span class="line">        now=now[char]</span><br><span class="line">    nodes.append(now)</span><br></pre></td></tr></table></figure>
+<p>解释：如果 char 不在 now 的键中，那么 <code>now=now[char]</code> 相当于先 <code>now[char] = {}</code>，然后再 <code>now = now[char]</code></p>
+<p>更进一步，可以简化为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">nodes=[]</span><br><span class="line">Trie = <span class="keyword">lambda</span>: collections.defaultdict(Trie)</span><br><span class="line">trie = Trie()</span><br><span class="line"><span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">    nodes.append(trie[word[<span class="number">-1</span>]][word[<span class="number">-2</span>]].........)</span><br></pre></td></tr></table></figure>
+<p>它就变成了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nodes = [reduce(dict.__getitem__, word[::<span class="number">-1</span>], trie)</span><br><span class="line">                 <span class="keyword">for</span> word <span class="keyword">in</span> words]</span><br></pre></td></tr></table></figure>
+<p>先不管数组的推导式，单看数组的一项 <code>reduce(dict.__getitem__, word[::-1], trie)</code>，<code>reduce</code> 三个参数分别为：方法，可循环项，初始值。即它初始值是trie，按照word[::-1]的循环顺序，每次去执行方法 <code>dict.__getitem__</code>，且将这个输出作为下次循环的输入，所以它就是<code>trie[word[-1]][word[-2]].........</code>的意思。</p>
+<h3 id="2-4-官方代码"><a href="#2-4-官方代码" class="headerlink" title="2.4 官方代码"></a>2.4 官方代码</h3><p>现在可以看懂官方代码了！</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minimumLengthEncoding</span><span class="params">(self, words: List[str])</span> -&gt; int:</span></span><br><span class="line">        words = list(set(words))</span><br><span class="line">        Tire  = <span class="keyword">lambda</span>: collections.defaultdict(Tire)</span><br><span class="line">        tire = Tire()</span><br><span class="line">        nodes = [reduce(dict.__getitem__, word[::<span class="number">-1</span>], tire)</span><br><span class="line">                 <span class="keyword">for</span> word <span class="keyword">in</span> words]</span><br><span class="line">        <span class="keyword">return</span> sum(len(word)+<span class="number">1</span> </span><br><span class="line">                   <span class="keyword">for</span> i, word <span class="keyword">in</span> enumerate(words) </span><br><span class="line">                   <span class="keyword">if</span> len(nodes[i]) == <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>参考：</strong> <a href="https://leetcode-cn.com/problems/short-encoding-of-words/solution/dan-ci-de-ya-suo-bian-ma-by-leetcode-solution/" target="_blank" rel="noopener">单词的压缩编码</a> 及其中 @Lucien 的评论</p>
+<h2 id="三、Python-新知识"><a href="#三、Python-新知识" class="headerlink" title="三、Python 新知识"></a>三、Python 新知识</h2><h3 id="3-1-sorted-函数"><a href="#3-1-sorted-函数" class="headerlink" title="3.1 sorted() 函数"></a>3.1 <strong>sorted() 函数</strong></h3><p>本题如果想对单词列表 words: List[str] 按照字符串长度从小到大排序，可以采用 <strong>sorted() 函数</strong></p>
+<p><strong>格式：</strong><code>sorted(iterable, cmp=None, key=None, reverse=False)</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iterable：是可迭代类型;</span><br><span class="line">cmp：用于比较的函数，比较什么由key决定;</span><br><span class="line">key：用列表元素的某个属性或函数进行作为关键字，有默认值，迭代集合中的一项;</span><br><span class="line">reverse：排序规则. reverse &#x3D; True  降序 或者 reverse &#x3D; False 升序，有默认值。</span><br></pre></td></tr></table></figure>
+<p><strong>举例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A = [<span class="string">'bb'</span>, <span class="string">'dddd'</span>, <span class="string">'a'</span>, <span class="string">'ccc'</span>]</span><br><span class="line">B = sorted(A, key = <span class="keyword">lambda</span> x: len(x))</span><br><span class="line">print(B)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;a&#39;, &#39;bb&#39;, &#39;ccc&#39;, &#39;dddd&#39;]</span><br></pre></td></tr></table></figure>
+<p><strong>参考：</strong> <a href="https://www.jb51.net/article/164342.htm" target="_blank" rel="noopener">Python中字符串List按照长度排序</a></p>
+<h3 id="3-2-List-sort-方法"><a href="#3-2-List-sort-方法" class="headerlink" title="3.2 List sort() 方法"></a>3.2 List sort() 方法</h3><p>要想对 <code>List</code> 按照字符串长度从小到大排序，也可用 <code>List</code> 的 <code>sort()</code> 方法</p>
+<p><strong>举例</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A = [<span class="string">'二二'</span>, <span class="string">'四四四四'</span>, <span class="string">'一'</span>, <span class="string">'三三三'</span>]</span><br><span class="line">A.sort(key = <span class="keyword">lambda</span> x: len(x))</span><br><span class="line">print(A)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;一&#39;, &#39;二二&#39;, &#39;三三三&#39;, &#39;四四四四&#39;]</span><br></pre></td></tr></table></figure>
+<p><strong>详见：</strong> <a href="https://www.runoob.com/python3/python3-att-list-sort.html" target="_blank" rel="noopener">Python3 List sort()方法</a></p>
+<h3 id="3-3-join-函数"><a href="#3-3-join-函数" class="headerlink" title="3.3 join() 函数"></a>3.3 join() 函数</h3><p><code>list</code> 想转 <code>str</code> 可以采用 join() 函数</p>
+<p>比如本题中 <code>words</code> 想转成 索引字符串 <code>S</code>，可以这样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S = <span class="string">'#'</span>.join(words) + <span class="string">'#'</span></span><br></pre></td></tr></table></figure>
+<p>详可参考：<a href="https://www.runoob.com/python/att-string-join.html" target="_blank" rel="noopener">Python join()方法</a></p>
+<h3 id="3-4-startswith-方法"><a href="#3-4-startswith-方法" class="headerlink" title="3.4 startswith() 方法"></a>3.4 startswith() 方法</h3><p><code>startswith()</code> 方法用于检查字符串是否是以指定子字符串开头。</p>
+<p><strong>示例</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'abc'</span>.startswith(<span class="string">'ab'</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">True</span><br></pre></td></tr></table></figure>
+<p>同样地，还有 <code>endswith()</code>方法</p>
+<p><strong>详见：</strong> <a href="https://www.runoob.com/python/att-string-startswith.html" target="_blank" rel="noopener">Python startswith()方法</a></p>
+<h3 id="3-5-Set-discard-方法"><a href="#3-5-Set-discard-方法" class="headerlink" title="3.5 Set discard() 方法"></a>3.5 Set discard() 方法</h3><p><code>discard()</code> 方法用于移除指定的集合元素。</p>
+<p>该方法不同于 <code>remove()</code> 方法，因为 <code>remove()</code> 方法在移除一个不存在的元素时会发生错误，而 <code>discard()</code> 方法不会。</p>
+<p><strong>详见：</strong> <a href="https://www.runoob.com/python3/ref-set-discard.html" target="_blank" rel="noopener">Python Set discard() 方法</a></p>
+<h3 id="3-6-一点编程技巧"><a href="#3-6-一点编程技巧" class="headerlink" title="3.6 一点编程技巧"></a>3.6 一点编程技巧</h3><p>在遍历列标时，如果边循环边删除列标元素，会导致循环次数是变化的，从而出现问题。解决方法是创建一个副本，删除的是副本中的元素。</p>
+<p>更多可<strong>参考：</strong> <a href="https://www.cnblogs.com/34fj/p/6351458.html" target="_blank" rel="noopener">Python遍历列表删除多个列表元素</a></p>
+<h2 id="四、数据结构新知识"><a href="#四、数据结构新知识" class="headerlink" title="四、数据结构新知识"></a>四、数据结构新知识</h2><h3 id="4-1-字典树"><a href="#4-1-字典树" class="headerlink" title="4.1 字典树"></a>4.1 字典树</h3><p><strong>字典树</strong>又名<strong>前缀树</strong>，<strong>Trie树</strong>，是一种存储大量字符串的树形数据结构，相比于HashMap存储，在存储单词（和语种无关，任意语言都可以）的场景上，节省了大量的内存空间。</p>
+<p>下图演示了一个保存了8个单词的字典树的结构，8个单词分别是：”A”, “to”, “tea”, “ted”, “ten”, “i”, “in”, “inn”。</p>
+<p><img src="/2020/03/29/lc-820/trie_1.png" style="zoom:45%;"></p>
+<p>怎么理解这颗树呢？你从根节点走到叶子节点，尝试走一下所有的路径。你会发现，每条从根节点到叶子节点的路径都构成了单词（有的不需要走到叶子节点也是单词，比如 “i” 和 “in”）。trie树里的每个节点只需要保存当前的字符就可以了（当然你也可以额外记录别的信息，比如记录一下如果以当前节点结束是否构成单词）。</p>
+<p>你注意到了吗？从根节点出发的路径，都是给定单词列表里某个/某些单词的前缀。反之，如果某个字符串没有出现在这棵树的路径上，那就肯定不是某个单词的前缀。</p>
+<p><strong>参考：</strong> <a href="https://leetcode-cn.com/problems/short-encoding-of-words/solution/99-java-trie-tu-xie-gong-lue-bao-jiao-bao-hui-by-s/" target="_blank" rel="noopener">99% Trie 吐血攻略，包教包会</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Array/" rel="tag"># Array</a>
+              <a href="/tags/Tire-tree/" rel="tag"># Tire tree</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/28/fj-key-points/" rel="prev" title="面试重要知识点总结">
+      <i class="fa fa-chevron-left"></i> 面试重要知识点总结
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、题目"><span class="nav-text">一、题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、字典树方法之正常走向Pythonic"><span class="nav-text">二、字典树方法之正常走向Pythonic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-最朴素的写法"><span class="nav-text">2.1 最朴素的写法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-从-Node-开始简化"><span class="nav-text">2.2 从 Node() 开始简化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-使用-defaultdict-进一步简化"><span class="nav-text">2.3 使用 defaultdict 进一步简化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-官方代码"><span class="nav-text">2.4 官方代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Python-新知识"><span class="nav-text">三、Python 新知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-sorted-函数"><span class="nav-text">3.1 sorted() 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-List-sort-方法"><span class="nav-text">3.2 List sort() 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-join-函数"><span class="nav-text">3.3 join() 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-startswith-方法"><span class="nav-text">3.4 startswith() 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Set-discard-方法"><span class="nav-text">3.5 Set discard() 方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-一点编程技巧"><span class="nav-text">3.6 一点编程技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、数据结构新知识"><span class="nav-text">四、数据结构新知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-字典树"><span class="nav-text">4.1 字典树</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Z. Wang"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Z. Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Z. Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

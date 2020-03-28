@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="一、Coding基础Leetcode 至少刷 200 题 + 剑指 offer，尤其是链表、树、动规。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试重要知识点总结">
+<meta property="og:url" content="http://yoursite.com/2020/03/28/fj-key-points/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="一、Coding基础Leetcode 至少刷 200 题 + 剑指 offer，尤其是链表、树、动规。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-28T15:59:38.000Z">
+<meta property="article:modified_time" content="2020-03-28T16:19:01.313Z">
+<meta property="article:author" content="Z. Wang">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/28/fj-key-points/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>面试重要知识点总结 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/28/fj-key-points/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Z. Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          面试重要知识点总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-28 23:59:38" itemprop="dateCreated datePublished" datetime="2020-03-28T23:59:38+08:00">2020-03-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-29 00:19:01" itemprop="dateModified" datetime="2020-03-29T00:19:01+08:00">2020-03-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%89%BE%E5%B7%A5%E4%BD%9C/" itemprop="url" rel="index">
+                    <span itemprop="name">找工作</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%89%BE%E5%B7%A5%E4%BD%9C/%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="index">
+                    <span itemprop="name">知识点</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、Coding基础"><a href="#一、Coding基础" class="headerlink" title="一、Coding基础"></a>一、Coding基础</h2><p>Leetcode 至少刷 200 题 + 剑指 offer，尤其是链表、树、动规。</p>
+<a id="more"></a>
+<h2 id="二、机器学习基础"><a href="#二、机器学习基础" class="headerlink" title="二、机器学习基础"></a>二、机器学习基础</h2><ul>
+<li><p><strong>《统计学习方法》</strong>（LR,SVM,EM,最大熵,集成学习等），值得反复看好几遍，每一遍都会加深理解；尤其是学习理论：</p>
+<ul>
+<li>贝叶斯决策理论</li>
+<li>假设空间概念</li>
+<li>经验风险/结构风险</li>
+<li>各类损失函数之间的区别与联系</li>
+<li>极大似然估计, 最大后验估计, 贝叶斯估计的区别与联系</li>
+</ul>
+</li>
+<li><p><strong>树模型系列论文</strong>深入理解，gbdt，xgboost，lightgbm</p>
+<p>树模型知识，推荐 <a href="http://wepon.me/files/gbdt.pdf" target="_blank" rel="noopener">wepon的总结</a></p>
+</li>
+<li><p><strong>深度学习基础</strong></p>
+<ul>
+<li>过拟合解决方法，dropout，bn，ln等</li>
+<li>学习器，各种optimizer原理及对比</li>
+<li>BP原理</li>
+<li>各种激活函数等，最好用numpy手写一遍MLP，包括train+infer</li>
+</ul>
+</li>
+<li><p><strong>概率图模型</strong></p>
+<p>LDA，ELBO，KL散度（e.g., 最小化KL散度和极大似然法联系），变分推断，吉布斯采样等</p>
+</li>
+<li><p><strong>评估体系</strong></p>
+<p>Precision, Recall，F1, AUC (实现+内在含义，多种角度理解，如正负样本偏序关系角度），还包括交叉验证等</p>
+</li>
+</ul>
+<p>机器学习基础重点关注 <strong>原理</strong> + <strong>推导</strong></p>
+<p><strong>贝叶斯决策理论</strong>是机器学习，深度学习的基础。这里头最重要的MLE, MAP, 贝叶斯估计的区别与联系，参考<a href="https://mp.weixin.qq.com/s/gRmYCMqTkwU-QPcQks5R8g" target="_blank" rel="noopener">李文哲老师的总结</a></p>
+<h2 id="三、数学题"><a href="#三、数学题" class="headerlink" title="三、数学题"></a>三、数学题</h2><p>比如<strong>贝叶斯公式算后验概率(求概率)</strong>，<strong>优惠券收集问题(求期望)</strong>，<strong>蓄水池问题（采样）</strong>等。还包括一些偏智力的题。这类问题主要难在<strong>理解题意</strong>，对数学中的概率/期望/微积分/极限等知识点会有些要求。之前看到的<a href="https://blog.csdn.net/BertDai/article/details/78070092" target="_blank" rel="noopener">部分概率题总结</a>，排版有点问题，凑合着看一些题型。</p>
+<h2 id="四、工程相关的问题"><a href="#四、工程相关的问题" class="headerlink" title="四、工程相关的问题"></a>四、工程相关的问题</h2><p>如大数据处理或分布式系统原理等。对于大数据题，如：海量数据求中位数等，主要涉及到<strong>哈希</strong>，<strong>堆</strong>，<strong>bit</strong>等数据结构，外加map-reduce编程范式的灵活应用。这类题型的总结百度一下非常多。</p>
+<h2 id="五、最新的科研趋势"><a href="#五、最新的科研趋势" class="headerlink" title="五、最新的科研趋势"></a>五、最新的科研趋势</h2><p>关注各大顶会的tutorial</p>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>算法岗要找的好，除了本身的长期积累沉淀的硬实力之外（Paper，比赛，实习，项目）；主要考核的主要就是<strong>三个</strong>方面的能力：</p>
+<ul>
+<li><strong>编程基础</strong> (数据结构和基础算法。以应对面试中的<strong>Coding</strong>环节)</li>
+<li><strong>数学基础</strong> (各种机器算法的原理，推导和数学题。以应对面试中的对<strong>知识深度</strong>的考察环节)</li>
+<li><strong>前沿知识广度</strong> (follow时下科研趋势，以应对面试中的对<strong>知识广度、开放性问题</strong>的考察等环节)。</li>
+</ul>
+<hr>
+<p><strong>参考文献</strong></p>
+<p>[1] <a href="https://zhuanlan.zhihu.com/p/107911095" target="_blank" rel="noopener">2021届校招算法岗知识点总结</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/28/lh-GD/" rel="prev" title="梯度下降法">
+      <i class="fa fa-chevron-left"></i> 梯度下降法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/29/lc-820/" rel="next" title="820. 单词的压缩编码">
+      820. 单词的压缩编码 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Coding基础"><span class="nav-text">一、Coding基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、机器学习基础"><span class="nav-text">二、机器学习基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、数学题"><span class="nav-text">三、数学题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、工程相关的问题"><span class="nav-text">四、工程相关的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、最新的科研趋势"><span class="nav-text">五、最新的科研趋势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、总结"><span class="nav-text">六、总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Z. Wang"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Z. Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Z. Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
