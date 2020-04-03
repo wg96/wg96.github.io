@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="概要&amp;emsp;&amp;emsp;压缩感知（CS, compressed sensing）需要求解带约束的优化问题。基于牛顿法的内点法（IPMs）是二阶方法，有许多数值上的优势，但有一个缺点：需要求解线性方程组，计算复杂度达到了$O(n^3)$。本文使用matrix-free IPM，不需要显式地列出和存储牛顿方程组。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用于压缩感知的Matrix-free内点法">
+<meta property="og:url" content="http://yoursite.com/2020/04/03/Matrix-free-IPM/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="概要&amp;emsp;&amp;emsp;压缩感知（CS, compressed sensing）需要求解带约束的优化问题。基于牛顿法的内点法（IPMs）是二阶方法，有许多数值上的优势，但有一个缺点：需要求解线性方程组，计算复杂度达到了$O(n^3)$。本文使用matrix-free IPM，不需要显式地列出和存储牛顿方程组。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-03T05:10:25.000Z">
+<meta property="article:modified_time" content="2020-04-03T05:53:52.033Z">
+<meta property="article:author" content="Z. Wang">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/03/Matrix-free-IPM/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>用于压缩感知的Matrix-free内点法 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/03/Matrix-free-IPM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Z. Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用于压缩感知的Matrix-free内点法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-03 13:10:25 / 修改时间：13:53:52" itemprop="dateCreated datePublished" datetime="2020-04-03T13:10:25+08:00">2020-04-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8E%8B%E7%BC%A9%E6%84%9F%E7%9F%A5/" itemprop="url" rel="index">
+                    <span itemprop="name">压缩感知</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>&emsp;&emsp;压缩感知（<strong>CS</strong>, compressed sensing）需要求解带约束的优化问题。基于牛顿法的内点法（IPMs）是二阶方法，有许多数值上的优势，但有一个缺点：需要求解线性方程组，计算复杂度达到了$O(n^3)$。本文使用matrix-free IPM，不需要显式地列出和存储牛顿方程组。</p>
+<a id="more"></a>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>&emsp;&emsp;CS的<strong>基追踪（Basis Pursuit）</strong>问题：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\min \limits_{x\in\mathbb{R}^n}\left\|x\right\|_1\\
+&\mathrm{s.t.}\quad{}Ax=\hat{b}
+\end{aligned}\tag{1}</script><p>在实际情况下，右端项是带噪声的，$b=\hat{b}+e$。稀疏解$\hat{x}$可以求解以下问题得到：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\mathrm{BPDN:}&\min\limits_{x\in\mathbb{R}^n}\tau\left\|x\right\|_1+\left\|Ax-b\right\|_2^2\\
+\mathrm{LASSO:}&\min\limits_{x\in\mathbb{R}^n}\left\|Ax-b\right\|_2\\
+&\mathrm{s.t.}\quad\left\|x\right\|_1\le\epsilon_1\\
+\mathrm{BP}_{\epsilon2}:&\min\limits_{x\in\mathbb{R}^n}\left\|x\right\|_1\\
+&\mathrm{s.t.}\quad\left\|Ax-b\right\|_2\le\epsilon_2
+\end{aligned}\tag{2}</script><p>&emsp;&emsp;<strong>GPSR</strong>（Gradient Projection Sparse Reconstruction）方法被认为是最有效的一阶方法之一。首先定义新变量$u,v\in\mathbb{R}^n$使得：</p>
+<script type="math/tex; mode=display">
+|x_i|=u_i+v_i,\forall{}i=1,2,\cdots,n</script><p>其中$u_i=max(x_i,0)$，$v_i=max(-x_i,0)$。GPSR求解$(2a)$的光滑形式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\min\limits_{z\in\mathbb{R}^n}\tau1_{2n}^\top{}z+\frac{1}{2}\left\|F^\top{}z-b\right\|_2^2\\
+&\mathrm{s.t.}\quad{}z\ge0
+\end{aligned}\tag{3}</script><p>其中$z=[u\ ;\ v]$，$F^\top=[A\ ;\ -A]$。</p>
+<p>&emsp;&emsp;已有的可以用于求解CS问题的IPM算法：$l_1\ l_s$算法，PDCO算法。但是没有一阶方法精准和快速。本文设计了一种专用于CS问题的<strong>原始-对偶</strong> IMP 算法。原始-对偶法用牛顿法计算每步迭代的原始-对偶方向。牛顿法求解线性化的KKT方程组的解，线性方程组是由一阶最优性条件产生的。线性方程组可由Krylov子空间方法求解，效果取决于谱性质（特征值）。采用直接法or迭代法，取决于以下几点：</p>
+<p>&emsp;&emsp;1. 线性方程组的<strong><em>稀疏模式(sparsity pattern)</em></strong><br>&emsp;&emsp;2. 是否存在 inexpensive 的预处理子？<br>&emsp;&emsp;3. 要存储的问题数据的大小<br>&emsp;&emsp;4. 线性方程组的系数矩阵，是否存在快速矩阵-向量乘积算法？比如GEMERES算法，运算量主要就是矩阵向量乘积。</p>
+<p>&emsp;&emsp;本文考虑的情况是：没有特别的稀疏模式，存储需求可能很高但是条件2和4都能满足。因此选用带预处理的共轭梯度法。在原始-对偶IPM算法的每一步，用 pCG 计算牛顿方向的近似。</p>
+<h3 id="压缩感知矩阵的性质"><a href="#压缩感知矩阵的性质" class="headerlink" title="压缩感知矩阵的性质"></a>压缩感知矩阵的性质</h3><p>&emsp;&emsp;CS矩阵具有特定的性质，提出的方法将利用这些性质。本文假设CS矩阵具有以下性质：</p>
+<p>&emsp;&emsp;- <strong>P1:</strong> 矩阵 $A$ 的行接近正交，即存在小 $\delta$ 使得</p>
+<script type="math/tex; mode=display">
+\left\|AA^\top-I_m\right\|_2\le\delta</script><p>&emsp;&emsp;- <strong>P2:</strong>（本文提出的<strong>RIP</strong>）$A$ 的每 $k$ 个列（$k\ll{}m$）几乎正交而且有相似的范数，即</p>
+<script type="math/tex; mode=display">
+\left\|\frac{n}{m}B^\top{}B-I_k\right\|_2\le\delta_k</script><p>其中 $B$ 由 $A$ 的任意$k$ 个列构成。 </p>
+<hr>
+<p><strong>定理 1 每个满足 $Ax=\hat{b}$ 的 <em>k-sparse</em> 向量 $x\in\mathbb{R}^n$ 是 $(1)$ 的唯一解，如果：</strong></p>
+<script type="math/tex; mode=display">
+\delta_{2k}<\frac{3\frac{m}{n}}{1+3\frac{m}{n}+\sqrt{6}}</script><p><strong>其中 $\delta_{2k}$ 是使性质 P2 成立的最小常数。</strong></p>
+<hr>
+<h3 id="matrix-free-IPM-中的原始-对偶问题"><a href="#matrix-free-IPM-中的原始-对偶问题" class="headerlink" title="matrix-free IPM 中的原始-对偶问题"></a>matrix-free IPM 中的原始-对偶问题</h3><p>&emsp;&emsp;原始问题$(3)$的对偶问题是：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\max\limits_{z,s\in\mathbb{R}^{2n}}&-\frac{1}{2}z^\top{}FF^\top{}z\\
+\mathrm{s.t.\ }&c+FF^\top{}z-s=0\\
+&z,s\ge0
+\end{aligned}\tag{4}</script><p>其中$c=\left[<br>\begin{array}<br>\\tau1_n-A^\top{}b<br>\\tau1_n+A^\top{}b<br>\end{array}<br>\right]<br>\in\mathbb{R}^{2n}$。</p>
+<p>&emsp;&emsp;原始问题 $(3)$ 和对偶问题 $(4)$ 的牛顿方向 $(\Delta{}z,\Delta{}s)$ 通过求解如下线性方程组得到：</p>
+<script type="math/tex; mode=display">
+\left[\begin{array}{cc}
+F F^{\top} & -I_{2 n} \\
+S & Z
+\end{array}\right] \times\left[\begin{array}{l}
+\Delta z \\
+\Delta s
+\end{array}\right]=\left[\begin{array}{l}
+f_{z} \\
+f_{s}
+\end{array}\right]\tag{5}</script><p>其中 $S$ 和 $Z$ 是对角矩阵，各自对角线元素组成的向量分别是 $s$，$z$ </p>
+<script type="math/tex; mode=display">
+f_{z}=s-c-F F^{\top} z, \quad f_{s}=\sigma \mu e-Z S 1_{2 n}\tag{6}</script><p>$\mu=z^{\top} s /(2 n)$ 是 IPM 的障碍项，$0 \leq \sigma \leq 1$ 。</p>
+<p>&emsp;&emsp;在 matrix-free 框架中，对偶变量 $\Delta{}s$ 通过以下方式求得：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\left(\Theta^{-1}+F F^{\top}\right) \Delta z=f_{z}+Z^{-1} f_{s}\\
+&\Delta s=Z^{-1} f_{s}-\Theta^{-1} \Delta z
+\end{aligned}\tag{7}</script><p>其中 $\Theta=S^{-1} Z \in \mathbb{R}^{2 n \times 2 n}$ 。线性方程组 $(7a)$ 接下来通过预处理过的迭代法来求解。因此，matrix-free IPM 算法主要有两个关键步骤：</p>
+<p>&emsp;&emsp;1. 用来求解 $(7a)$ 的迭代方法<br>&emsp;&emsp;2. 为了利用矩阵结构而特别设计的预处理子</p>
+<p>&emsp;&emsp;下面的一节解决这两个关键问题。</p>
+<h3 id="带预处理的共轭梯度法"><a href="#带预处理的共轭梯度法" class="headerlink" title="带预处理的共轭梯度法"></a>带预处理的共轭梯度法</h3><p>&emsp;&emsp;要求解的线性方程组 $(7a)$ 的系数矩阵是对称正定的，因此采用CG法。然而，当矩阵是病态的，或者特征值不集中时，CG法的收敛速度将会很慢。本节提出了有效的对角矩阵预处理子，并证明了：在特定情形下（实际情况是可以满足的），预处理的矩阵的特征值都在 $1$ 周围。</p>
+<p>&emsp;&emsp;用于线性方程组 $(7a)$ 的预处理子利用了前面提到的 CS 矩阵的性质。此外还利用了下面这个结论： $(7a)$ 中的矩阵 $\Theta$  接近最优性。从上面给出的原始-对偶问题可知最优性条件是：$s_jz_j=0,\forall{}j=1,2,\cdots,2n$ 。IPMs 为了确保解收敛到最优解，先使 $s_hz_j=\mu,\forall{}j$ ，其中 $\mu$ 就是 IPM 的障碍项。然后，逐渐减小 $\mu$ 到 0。最优性下标 $j\in{}{1,2,\cdots,2n}$ 被分成了两个不交的集合：</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+\mathcal{B}=\left\{j | z_{j} \rightarrow z_{j}^{*}>0, \quad \mathrm{and}\quad s_{j} \rightarrow s_{j}^{*}=0\right\} \\
+\mathcal{N}=\left\{j | z_{j} \rightarrow z_{j}^{*}=0, \quad\mathrm{and}\quad s_{j} \rightarrow s_{j}^{*}>0\right\}
+\end{array}\tag{8}</script><p>$\mathcal{B}$ 和 $\mathcal{N}$ 决定了约束到最优解的过程。然而，这种划分会使对角矩阵 $\Theta=S^{-1}Z$ 的数值性质变得非常的糟。事实上，当 $\mu$ 趋向于 0 时，下标 $j\in\mathcal{B}$，$\Theta_j$ 将会趋向于无穷；而对下标 $j\in\mathcal{N}$ ，$\Theta_j$ 将会趋向于 0。</p>
+<p>&emsp;&emsp;由于 $z=[u;v]$ 。稀疏的最优解仅有 $k(k\ll{}2n)$ 个非零分量。满足最优性条件时，集合 $\mathcal{B}$ 的基数是 $k$ 。因此，当 IPM 进行到后面，迭代就变成了：</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll}
+\Theta_{i} \gg 1 & \forall i \in \mathcal{B}, \quad \operatorname{card} \mathcal{B}=k \\
+\Theta_{i} \ll 1 & \forall i \in \mathcal{N}, \quad \operatorname{card} \mathcal{N}=2 n-k
+\end{array}\tag{9}</script><p>&emsp;&emsp;下面开始构造线性方程组 $(7a)$ 的预处理子，$(7a)$ 的系数矩阵为：</p>
+<script type="math/tex; mode=display">
+H=\Theta^{-1}+F F^{\top}\tag{10}</script><p>由 $(9)$ 式可知，当 IPM 快要迭代到满足可行性的解时，矩阵 $\Theta^{-1}$ 中有许多元素的值变得非常大。接下来引入 $C\gg{}1$：</p>
+<script type="math/tex; mode=display">
+\#\left(\Theta_{j}^{-1}<C\right)=l\tag{11}</script><p>$l$ 表示矩阵 $\Theta^{-1}$ 中较小元素的个数。$(10)$ 式中第二项 $FF^{\top}$ 的秩是 $m$ ，相当于对矩阵 $\Theta^{-1}$ 的一个小扰动，因为 $\Theta^{-1}$ 的Frobenius范数要远大于 $FF^{\top}$ 。本文提出的预处理子对 $FF^{\top}$ 进行了简单的近似。首先，由于 $\Theta=\operatorname{diag}\left(\Theta<em>{u}, \Theta</em>{v}\right)$，$F^{\top}=[A;-A]$ 我们可以把线性方程组 $(7a)$ 的系数矩阵写成分块矩阵的形式：</p>
+<script type="math/tex; mode=display">
+H=\left[\begin{array}{cc}
+\Theta_{u}^{-1} & \\
+& \Theta_{v}^{-1}
+\end{array}\right]+\left[\begin{array}{cc}
+A^{\top} A & -A^{\top} A \\
+-A^{\top} A & A^{\top} A
+\end{array}\right]\tag{12}</script><p>&emsp;&emsp;本文提出的预处理子是用数量矩阵 $\rho{}I_n,\rho=m/n$ 来近似 $A^{\top}A$ ：</p>
+<script type="math/tex; mode=display">
+P=\left[\begin{array}{cc}
+\Theta_{u}^{-1}+\rho I_{n} & -\rho I_{n} \\
+-\rho I_{n} & \Theta_{v}^{-1}+\rho I_{n}
+\end{array}\right]\tag{13}</script><p>&emsp;&emsp;引理 1 给出了预处理过的矩阵 $P^{-1}H$ 的谱性质：</p>
+<hr>
+<p><strong>引理 1 矩阵 $H$ 定义为：</strong></p>
+<script type="math/tex; mode=display">
+H=\Theta^{-1}+A^{\top} A</script><p><strong>其中 $\Theta=diag(\Theta_1,\Theta_2,\cdots\Theta_n)$ 是 $n\times{}n$ 的对角矩阵，对角元素 $\Theta_j&gt;0$，$A$ 是 $m\times{}n$ 的矩阵，$m\le{}n/2$。设 $C$ 是任一正常数，$l$ 由 $(11)$ 式定义。此外，假设 $A$ 对一些常数 $\delta_l,k=l$ 满足性质 P2 。如果矩阵 $A$ 行正交，那么 $P^{-1}H$ 的特征值都集中在 1 附近，记 $\tau=\lambda-1$ ，即：</strong></p>
+<script type="math/tex; mode=display">
+|\tau| \leq \delta_{l}+\frac{1}{4} \frac{(3-\rho)^{2}}{\rho \delta_{l} C} \quad \forall \lambda \in \operatorname{spec}\left(P^{-1} H\right)\tag{14}</script><p><strong>如果矩阵 $A$ 接近行正交，即，满足性质 P1 ，那么：</strong></p>
+<script type="math/tex; mode=display">
+|\tau| \leq \delta_{l}+\frac{1}{4} \frac{(1+\delta-\rho+2 \sqrt{1+\delta})^{2}}{\rho \delta_{l} C} \quad \forall \lambda \in \operatorname{spec}\left(P^{-1} H\right)\tag{15}</script><p><strong>$\delta$ 由性质 P1 定义。</strong></p>
+<hr>
+<p>&emsp;&emsp;要使引理 1 变得实用，我们要使不等式 $(14)$，$(15)$ 的右端项远小于 1 。观察右端项，$C$ 越大越好。由 $(11)$ 可知，当 $C$ 变大时，$l$ 也会变大，相应地，常数 $\delta_l$ 也会增加。不等式对任意的 $C$ 都成立，所以我们可以替换成：</p>
+<script type="math/tex; mode=display">
+|\tau| \leq \min_C\Big(\delta_{l}+\frac{1}{4} \frac{(1+\delta-\rho+2 \sqrt{1+\delta})^{2}}{\rho \delta_{l} C}\Big)\tag{16}</script><p>以及</p>
+<script type="math/tex; mode=display">
+|\tau| \leq \min_C\Big(\delta_{l}+\frac{1}{4} \frac{(3-\rho)^{2}}{\rho \delta_{l} C}\Big)\tag{17}</script><p>然后选择常数 $C$ 使右端项达到最小。</p>
+<p>&emsp;&emsp;数值实验表明，只要 $l$ 使 $\delta_l&lt;1$ ，那么 $P^{-1}H$ 的特征值将会集中在 1 附近。</p>
+<p>&emsp;&emsp;定理 2 可以看作引理 1 的直接推论：</p>
+<hr>
+<p><strong>定理 2 设 $H$ 和 $P$ 分别是 $(12)$，$(13)$ 式定义的分块矩阵，那么预处理过的矩阵 $P^{-1}H$ ：</strong></p>
+<ol>
+<li><strong>有 $n$ 重特征值 1</strong></li>
+<li><strong>剩下的 $n$ 个特征值由引理 1 定义：$\Theta=\Theta_u+\Theta_v$ </strong></li>
+</ol>
+<hr>
+<p>&emsp;&emsp;定理 2 表明：$P^{-1}H$ 的特征值都集中在 1 附近。因此，用 CG 法求解用 $P$ 预处理过的线性方程组 $(7a)$ 时，可在很少的有限步收敛。</p>
+<p>&emsp;&emsp;数值实验表明本文提出的算法是高效的。</p>
+<h3 id="对应文献"><a href="#对应文献" class="headerlink" title="对应文献"></a>对应文献</h3><p>[1] Fountoulakis K, Gondzio J, Zhlobich P. <strong>Matrix-free interior point method for compressed sensing problems[J]</strong>. Mathematical Programming  Computation, 2014, 6(1): 1-31.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/03/CS-note/" rel="prev" title="压缩感知综述">
+      <i class="fa fa-chevron-left"></i> 压缩感知综述
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概要"><span class="nav-text">概要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩感知矩阵的性质"><span class="nav-text">压缩感知矩阵的性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#matrix-free-IPM-中的原始-对偶问题"><span class="nav-text">matrix-free IPM 中的原始-对偶问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#带预处理的共轭梯度法"><span class="nav-text">带预处理的共轭梯度法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对应文献"><span class="nav-text">对应文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Z. Wang"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Z. Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Z. Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+</body>
+</html>

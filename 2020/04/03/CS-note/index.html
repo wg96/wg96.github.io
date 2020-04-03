@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="什么是压缩感知（Compressed Sensing）？感知（Sensing）&amp;emsp;&amp;emsp;感知（Sensing）描述的是，为了表达和恢复某一个信号，对其采取某种感知手段（对图像的imaging，对连续信号的 sampling 等等），从而得到这种感知模态下的度量值，以便之后的信号重建以及分析等应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="压缩感知综述">
+<meta property="og:url" content="http://yoursite.com/2020/04/03/CS-note/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="什么是压缩感知（Compressed Sensing）？感知（Sensing）&amp;emsp;&amp;emsp;感知（Sensing）描述的是，为了表达和恢复某一个信号，对其采取某种感知手段（对图像的imaging，对连续信号的 sampling 等等），从而得到这种感知模态下的度量值，以便之后的信号重建以及分析等应用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/04/03/CS-note/CSstruct.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/03/CS-note/sparsity1.png">
+<meta property="article:published_time" content="2020-04-03T05:04:30.000Z">
+<meta property="article:modified_time" content="2020-04-03T05:34:51.554Z">
+<meta property="article:author" content="Z. Wang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/04/03/CS-note/CSstruct.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/03/CS-note/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>压缩感知综述 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/03/CS-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Z. Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          压缩感知综述
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-03 13:04:30 / 修改时间：13:34:51" itemprop="dateCreated datePublished" datetime="2020-04-03T13:04:30+08:00">2020-04-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8E%8B%E7%BC%A9%E6%84%9F%E7%9F%A5/" itemprop="url" rel="index">
+                    <span itemprop="name">压缩感知</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="什么是压缩感知（Compressed-Sensing）？"><a href="#什么是压缩感知（Compressed-Sensing）？" class="headerlink" title="什么是压缩感知（Compressed Sensing）？"></a>什么是压缩感知（Compressed Sensing）？</h3><h4 id="感知（Sensing）"><a href="#感知（Sensing）" class="headerlink" title="感知（Sensing）"></a>感知（Sensing）</h4><p>&emsp;&emsp;<strong>感知（Sensing）</strong>描述的是，为了表达和恢复某一个信号，对其采取某种感知手段（对图像的imaging，对连续信号的 sampling 等等），从而得到这种感知模态下的度量值，以便之后的信号重建以及分析等应用。</p>
+<a id="more"></a>
+<p>&emsp;&emsp;以图像重建为例：若要感知一幅 $10\times{}10$  的图像，最简单方式是直接在空间域里面感知。得到并储存图像的 100 个像素点，把这 100 个像素点排列为 $10\times{}10$ 矩阵的方式，重建这副目标图像。获取100个点的过程，就称之为感知。</p>
+<h4 id="压缩（Compressed）"><a href="#压缩（Compressed）" class="headerlink" title="压缩（Compressed）"></a>压缩（Compressed）</h4><p>&emsp;&emsp;在上面的例子中，我们感知了一个 $10\times{} 10$ 图像全部的100个像素点，这种感知称为 <strong>全采样（full sampling）</strong>。因为目标信号是 100 维的，采样值也是 100 维的，可以直接完美地恢复图像。这样的感知方式没有任何的压缩，即：感知到的维度 = 信号本身的维度。</p>
+<p>&emsp;&emsp;如果感知的维度 &lt; 信号本身的维度，就称为是<strong>欠采样（under-sampling）</strong>，这样就起到了对全采样的压缩（compressed）。</p>
+<h4 id="CS-要解决的问题"><a href="#CS-要解决的问题" class="headerlink" title="CS 要解决的问题"></a>CS 要解决的问题</h4><p>&emsp;&emsp;压缩感知要解决的是，如何在欠采样的情况下，完美地恢复目标图像。按照经典信号处理的理论，这类问题是存在无穷多解的。把这类问题成为 <strong>病态问题（ill-posed problem）</strong>，压缩感知就是用来解决病态问题的逆问题。</p>
+<p>&emsp;&emsp;压缩感知之所以能够完美恢复图像，主要是更加聪明地去采样（感知矩阵的<strong>非相干性</strong>），并利用了信号的先验条件（<strong>稀疏性</strong>），非相干性和稀疏性后面将会详细描述。</p>
+<h3 id="压缩感知的稀疏表示"><a href="#压缩感知的稀疏表示" class="headerlink" title="压缩感知的稀疏表示"></a>压缩感知的稀疏表示</h3><p>&emsp;&emsp;由 Nyquist 采样定理知，只有采样速率大于或者等于信号带宽的 2 倍时，才能精确地重建或构建原始信号。通常的做法是先使用 Nyquist 速率采样，再进行采样数据的压缩。问题是，对于超宽带信号，Nyquist 速率采样成本太高，而且大量被压缩掉的数据对信号而言是不重要或者冗余的信息。</p>
+<p>&emsp;&emsp;<strong>稀疏信号</strong>是指在大多数采样时刻的取值等于零或者近似等于零，只有少数采样时刻的取值明显不等于零信号。</p>
+<p>&emsp;&emsp;许多自然信号在时域并不是稀疏信号，但是在某个变换域是稀疏的。这些稀疏变换工具包括Fourier变换、短时Fourier变换、小波变换和Gabor变换等。例如，窄带信号通过Fourier变换，其频谱是稀疏的。又如，语音信号在时域不是稀疏的，但经过短时Fourier变换后，在频域为稀疏的。</p>
+<p>&emsp;&emsp;在时域不是稀疏的，在某个变换域为稀疏的信号常称为可压缩信号。</p>
+<p>&emsp;&emsp;对于稀疏的或可压缩的信号，既然传统方法采样得到的多数数据会被舍掉，何不避免获取全部数据，而直接采样需要保留的数据呢？压缩+低速率采样构成了与 Nyquist 采样理论不同的一种采样新理论——<strong>压缩感知（compressed sensing, CS）</strong>。</p>
+<p>&emsp;&emsp;令 $x(t)$ 是一连续时间信号，理想情况下，我们希望使用 Nyquist 速率采样，得到 $n$ 个离散时间信号的向量 $x=[x(1),\cdots,x(n)]^{\mathrm{T}}\in\mathbb{R}^n$。然而，实际上，我们使用远低于Nyquist速率采样，只得到一低维观测数据向量 $y=[y(1),\cdots,y(m)]^\mathrm{T}\in\mathbb{R}^m$， 其中</p>
+<script type="math/tex; mode=display">
+y(k)=\langle{}\phi_k,x\rangle,\quad{}k\in{}M</script><p>式中 $M\subset{}{1,\cdots,n}$ 是一个基数（cardinality）$m\ll{}n$ 的子集，而 $\phi_k$ 表示感知基 $\Phi\in\mathbb{R}^{n\times{}n}$ 的第 $k$ 列。上式又可写成矩阵向量形式</p>
+<script type="math/tex; mode=display">
+y=Ax</script><p>式中，感知矩阵 $A\in\mathbb{R}^{m\times{}n}$ 的 $m$ 个行向量由<strong>感知基（sensing basis）</strong> $\Phi$  的 $m$ 个列向量的转置排列组成，即 $A=[\phi_1,\cdots,\phi_m]^{\rm{T}}$。</p>
+<p>&emsp;&emsp;感知波形 $y$ 可以是时域或空域的采样向量；若感知波形为像素的指标函数，则 $y$ 是由数字摄像机的传感器采集的图像数据向量；若感知形为正弦波，则 $y$ 是Fourier系数向量，这正是核磁共振成像（MRI）的感知模式。</p>
+<p>&emsp;&emsp;然而，即使感知波形 $y$ 和感知矩阵 $A$ 已知，我们也无法通过求解矩阵方程 $y=Ax$，恢复或者重构高维信号向量 $x$，这主要是因为 $m\ll{}n$，使得求解欠定的矩阵方程的 $n$ 维解向量 $x$ 往往不实际，何况使用 Nyquist 速率对超宽带信号采样的成本也很高，例如，对某个1G带宽的超宽带视频信号，至少得用2G Hz的Nyquist速率采样，则 $n=2\times{}10^9$，即整个解向量 $x$至少含有 $2\times{}10^9$ 个元素。</p>
+<p>&emsp;&emsp;实际的信号或者图像常常是用时域表示的，并且在某个变换域（如频域）是可压缩的，而可压缩的信号或图像往往可以使用稀疏向量充分逼近。于是，可以使用某个<strong>表示矩阵（representation matrix）</strong> $\Psi\in\mathbb{R}^{n\times{}n}$，将 $x$ 从时域变换到频域或者其他某个可压缩的变换域，得到 $x$ 的稀疏表示</p>
+<script type="math/tex; mode=display">
+x=\Psi\alpha</script><p>其中，系数向量 $\alpha\in\mathbb{R}^n$ 是 $x$ 的 K-稀疏表示，即 $\alpha$ 只含 $K$ 个非零元素。</p>
+<p>&emsp;&emsp;综上立得</p>
+<script type="math/tex; mode=display">
+y=A\Psi\alpha=V\alpha\tag{1}</script><p>式中 $V=A\Psi$ 称为<strong>全息字典（holographic dictionary）</strong>，它包含了感知和表示的全面信息。</p>
+<p>&emsp;&emsp;现在的问题是：在给定感知基 $\Phi\in\mathbb{R}^{n\times{}n}$ 和表示基 $\Psi\in\mathbb{R}^{n\times{}n}$ 的情况下，能否通过求解欠定的矩阵方程式 $(1)$，由低维的感知波形 $y\in\mathbb{R}^m$ 准确地或高概率地重构出Nyquist速率采样的高维数据向量 $x\in\mathbb{R}^n$。</p>
+<p>&emsp;&emsp;用低维的采样数据向量恢复或重构Nyquist速率采样的高维数据向量，称为压缩感知。下图画出了压缩感知的方框图。图中，虚线所示的部分为虚拟部分，是实际中不执行的操作。</p>
+<p><img src="/2020/04/03/CS-note/CSstruct.png" style="zoom:40%;"></p>
+<h3 id="信号的稀疏性"><a href="#信号的稀疏性" class="headerlink" title="信号的稀疏性"></a>信号的稀疏性</h3><p>&emsp;&emsp;稀疏性表达的思想是：当使用合适的表示基 $\it \Psi$ 作为信号表示时，许多自然的信号和图像都是稀疏的或可压缩的。</p>
+<p>&emsp;&emsp;向量 $x\in{} \mathbb{R}^n$ 是使用Nyquist速率采样得到的 $n$ 个离散时间信号向量，由一组标准正交基 $\psi_1,\psi_2,\cdots{}, \psi_n$张成：</p>
+<script type="math/tex; mode=display">
+x(t)=\sum_{i=1}^{n}\alpha_i\psi_i(t)\tag{2}</script><p>其中 $\alpha_i=\langle{}x,\psi_i\rangle$，这里的 $\langle{},\rangle$ 表示内积。写成矩阵向量形式：</p>
+<script type="math/tex; mode=display">
+x=\mathit{\Psi{}}\alpha</script><p>其中，表示基 $\Psi{}=[\psi_1\ \psi_2\ \cdots{}\  \psi_n]$ 是一个 $n$ 阶方阵。</p>
+<p>&emsp;&emsp;如下图所示，(a)是原始的百万像素图像，单个像素的取值范围 $[0,\ 255] $ ；(b)是原始图像的小波变换的系数，大部分系数的都很小，只有少部分的系数很大，这些系数捕获了大部分信号能量（signal energy），图片是高度可压缩的。</p>
+<p><img src="/2020/04/03/CS-note/sparsity1.png" style="zoom:67%;"></p>
+<p>&emsp;&emsp;当一段信号可以稀疏展开时，我们可以丢掉系数值较小的部分，这样压缩了数据，造成的损失却很小。</p>
+<p>&emsp;&emsp;我们称向量是 <strong>K-sparse</strong> 的，如果它至多只有 K 个非零分量。</p>
+<p> &emsp;&emsp;$(2)$ 式中 $(\alpha_i)$，保留最大的 $K$ 个，其它均置为 0，生成的向量记为 $\alpha_k$ 。$\alpha_k$ 是 K-sparse 的。根据定义</p>
+<script type="math/tex; mode=display">
+x_k=\Psi{} \alpha_k</script><p>所以 $\left|x-x_k\right|_2=\left|\Psi(\alpha-\alpha_k)\right|_2$，又 $l_2$ 范数是酉不变范数，故 $\left|x-x_k\right|_2=\left|\alpha-\alpha_k\right|_2$。如果 $\alpha$ 是稀疏的，或者可压缩的（compressible），即将 $(\alpha_i)$ 从大到小排列，递减速度很快。那么 $\alpha_k$ 可以很好地近似 $\alpha$，$\left|x-x_k\right|_2$ 也就会很小。综上，我们丢掉了很大一部分的系数，造成的损失却很小。</p>
+<p>&emsp;&emsp;这个原则是绝大部分现代有损编码（比如：JPED-2000）的基础。如果需要压缩数据的话，只需要由 $x$ 计算出 $\alpha$，然后自适应地找到 $K$ 个重要系数的值和位置进行编码。这样的过程需要知道所有的系数（$n$个，即$\alpha$），因为重要信息的位置可能不会提前知晓。在上面举的例子中，重要信息的位置集中在图像边缘的周围。</p>
+<p>&emsp;&emsp;稀疏性是一种基本的建模工具，是信号处理（比如准确的统计估计，分类，数据压缩等）的基础。稀疏性对采集过程本身具有重要影响，决定了非自适应地获取信号的效率。</p>
+<h3 id="非相干性"><a href="#非相干性" class="headerlink" title="非相干性"></a>非相干性</h3><p>&emsp;&emsp;非相干性（incoherence）的基本思想是：当感知基 $\Phi$ 与表示基 $\Psi$ 不相干时，与感兴趣的自然信号和图像不同，采样或者感知的波形 $y$ 具有极为稠密的表达式 $(1)$ ，其中 $\alpha$ 是一个K-稀疏的系数向量。</p>
+<p>&emsp;&emsp;考虑 $m\times{}n$ 测量矩阵 $A=[a_1,\cdots,a_n]$，其列向量已经全部归一化，即 $\left|a_i\right|_2=1,i=1,\cdots,n$。衡量一个矩阵质量的经典测度是矩阵列向量之间的相干：</p>
+<hr>
+<p>定义 1 <strong>矩阵的相干</strong></p>
+<p>一个矩阵的相干（coherence）定义为两个不同列向量之间的互相关的最大绝对值</p>
+<script type="math/tex; mode=display">
+\mu(A)=\max\limits_{i\neq{}j}|\langle{}a_i,a_j\rangle|=\max\limits_{i\neq{}j}|a_i^\mathrm{T}a_j|</script><hr>
+<p>&emsp;&emsp;粗略地讲，相干参数 $\mu$ 可以度量两个列向量之间是如何相类似的，若相干参数大，则至少有两个列向量彼此相类似。反之，若相干参数 $\mu$ 小，则测量矩阵 $A$ 的各个列是几乎相互正交的。</p>
+<hr>
+<p>定义 2 <strong>两个矩阵间的互相干参数</strong></p>
+<p>两个 $n\times{}n$ 矩阵 $A$ 和 $B$ 之间的互相干参数（mutual coherence parameter）定义为</p>
+<script type="math/tex; mode=display">
+\mu(A,B)=\sqrt{n}\max\limits_{1\le{}j,k\le{}n}|\langle{}a_j,b_k\rangle|</script><hr>
+<p>&emsp;&emsp;通俗地讲，互相干度量 $A$ 的列向量 $a_j$ 和 $B$ 的列向量 $b_k$ 之间的最大相关。如果 $A$ 和 $B$ 含有相关的任何两个列向量，则矩阵 $A$ 和 $B$ 之间的相干参数就大；反之，若两个矩阵之间的互相干很小，则一个矩阵的所有列向量都与另一矩阵的各个列向量几乎相互正交。</p>
+<hr>
+<p>定义 3 <strong>非相干的感知基矩阵</strong></p>
+<p><font face="楷体">一个 $m\times{}n$ 感知基矩阵 $\Phi$ 称为非相干的（incoherent），若</font></p>
+<script type="math/tex; mode=display">
+\max\limits_{j\neq{}k}|\langle\phi_j,\phi_k\rangle|\le\frac{1}{\sqrt{m}}</script><hr>
+<p>定义 4 <strong>紧致框架</strong></p>
+<p>一个 $m\times{}n\ (m&lt;n)$ 宽矩阵 $\Phi$ 称为紧致框架（tight frame），若</p>
+<script type="math/tex; mode=display">
+\it{\Phi\Phi^\mathrm{T}}=\frac{n}{m}I_{m\times{}m}</script><hr>
+<p>定义 5 <strong>共形矩阵</strong></p>
+<p>满足 $MM^\mathrm{T}=c^2I_{m\times{}m}$ 的所有 $m\times{}n(m&lt;n)$ 宽矩阵 $M$ 的集合称为共形矩阵（conformal matrices）。在所有的共形矩阵中，紧致框架具有最小的谱范数。</p>
+<hr>
+<p>&emsp;&emsp;由文献可知：感知基矩阵 $\Phi\in\mathbb{R}^{n\times{}n}$ 和表示基矩阵 $\Psi\in\mathbb{R}^{n\times{}n}$ 之间的互相干 $\mu(\Phi,\Psi)\in[1,\sqrt{n}]$。因此，称感知基矩阵 $\Phi$ 和表示基矩阵 $\Psi$ 非相干，若</p>
+<script type="math/tex; mode=display">
+\max\limits_{j\neq{}k}|\langle\phi_j,\psi_k\rangle|\le1</script><h3 id="压缩感知有关定理"><a href="#压缩感知有关定理" class="headerlink" title="压缩感知有关定理"></a>压缩感知有关定理</h3><hr>
+<p><strong>定理 1 假设 $x\in\mathbb{R}^n$，感知矩阵 $A\in\mathbb{R}^{m\times{}n}$ 由感知基 $\Phi$ 的 $m$ 个列向量转置组成；并且 $x$ 用表示基 $\Psi$ 表示的系数向量 $\alpha$ 是K-稀疏的。若</strong></p>
+<script type="math/tex; mode=display">
+m\ge{}C\mu^2(\mathit{\Phi,\Psi})K\log(n/\delta)</script><p><strong>对某个正常数 $C$ 成立，则 $L_1$ 范数最小化问题</strong></p>
+<script type="math/tex; mode=display">
+\min\left\|\alpha\right\|_1\quad{}\mathrm{subject\ to}\ y=A\Psi\alpha</script><p><strong>的解 $\alpha$ 可以以 $1-\delta$ 的概率准确求出，从而高维离散时间向量 $x$ 可以从低维采样向量 $y$ 以 $1-\delta$ 的概率重构。</strong></p>
+<hr>
+<p>&emsp;&emsp;从 定理1 可以得出以下结果：</p>
+<p>&emsp;&emsp;(1) 感知基 $\Phi$ 和表示基 $\Psi$ 之间的相干性越小，所需要的测量样本数 $m$ 就越少。</p>
+<p>&emsp;&emsp;(2) 虽然低速率只采样了 $m$ 个数据，它比用Nyquist速率采样的信号长度 $n$ 少得多，但是并不会造成任何信息的丢失，因为信号可以高概率地精确恢复或者重构。如果 $\mu(\Phi,\Psi)$ 等于或者接近1，则只要用 $Klogn$ 数量级的 $m$ 个测量数据即可。</p>
+<p>&emsp;&emsp;综上所述，压缩感知包含了以下两个关键步骤：</p>
+<p>&emsp;&emsp;(1) 求解非二次型凸优化问题</p>
+<script type="math/tex; mode=display">
+\min\left\|\alpha\right\|_0\quad\mathrm{subject\ to}\ \ y=V\alpha\</script><p>以此来估计稀疏的系数向量 $\alpha$。</p>
+<p>&emsp;&emsp;(2) Nyquist速率的采样数据向量通过 $x=\Psi\alpha$ 重构。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/29/lc-820/" rel="prev" title="820. 单词的压缩编码">
+      <i class="fa fa-chevron-left"></i> 820. 单词的压缩编码
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/03/Matrix-free-IPM/" rel="next" title="用于压缩感知的Matrix-free内点法">
+      用于压缩感知的Matrix-free内点法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是压缩感知（Compressed-Sensing）？"><span class="nav-text">什么是压缩感知（Compressed Sensing）？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#感知（Sensing）"><span class="nav-text">感知（Sensing）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压缩（Compressed）"><span class="nav-text">压缩（Compressed）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CS-要解决的问题"><span class="nav-text">CS 要解决的问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩感知的稀疏表示"><span class="nav-text">压缩感知的稀疏表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信号的稀疏性"><span class="nav-text">信号的稀疏性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非相干性"><span class="nav-text">非相干性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩感知有关定理"><span class="nav-text">压缩感知有关定理</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Z. Wang"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Z. Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Z. Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+</body>
+</html>
