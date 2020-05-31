@@ -59,7 +59,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/06/01/KMP-pattern-search/KMP_2.png">
 <meta property="og:image" content="http://yoursite.com/2020/06/01/KMP-pattern-search/KMP_3.png">
 <meta property="article:published_time" content="2020-05-31T16:44:28.000Z">
-<meta property="article:modified_time" content="2020-05-31T16:52:49.851Z">
+<meta property="article:modified_time" content="2020-05-31T16:57:25.869Z">
 <meta property="article:author" content="Z. Wang">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/06/01/KMP-pattern-search/KMP_1.png">
@@ -205,7 +205,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-06-01 00:44:28 / 修改时间：00:52:49" itemprop="dateCreated datePublished" datetime="2020-06-01T00:44:28+08:00">2020-06-01</time>
+              <time title="创建时间：2020-06-01 00:44:28 / 修改时间：00:57:25" itemprop="dateCreated datePublished" datetime="2020-06-01T00:44:28+08:00">2020-06-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,16 +249,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">txt[] &#x3D; &quot;ABABABCABABABCABABABC&quot;</span><br><span class="line">pat[] &#x3D; &quot;ABABAC&quot; (not a worst case, but a bad case for Naive)</span><br></pre></td></tr></table></figure>
 <h3 id="KMP算法的主要思想"><a href="#KMP算法的主要思想" class="headerlink" title="KMP算法的主要思想"></a>KMP算法的主要思想</h3><p>KMP算法的主要思想时：在一个window中，不论我们是否检测到不匹配的情况，我们其实也知道了下个window中的一些字符的信息。就是要利用这部分信息，不再比较已经知道match的字符串。举个例子：</p>
 <p>txt =  “AAAAABAAABA”<br>pat = “AAAA”</p>
-<font face="楷体">我们比较 `txt` 和 `pat` 的第一个窗口：</font>
-txt =  "**AAAA**ABAAABA"
-pat = "**AAAA**"      [初始位置]
-<font face="楷体">我们发现了匹配的情况。这部分和 Navie String Matching 一致。</font>
-
-<font face="楷体">下一步，我们比较 `txt` 和 `pat` 的下一个window：</font>
-txt = "A**AAA<font color="red">A</font>**BAAABA"
-pat =  "**AAA<font color="red">A</font>**"
-<font face="楷体">示例就是KMP算法比朴素算法优化之处。我们只需比较 `pat` 中第 4 个 <font color="red">A </font>和 `txt` 中对应位置的字符串是否一致。因为我们已经知道前 3 个字符一定是匹配的，可以直接跳过。</font>
-
+<p>我们比较 <code>txt</code> 和 <code>pat</code> 的第一个窗口：<br>txt =  “<strong>AAAA</strong>ABAAABA”<br>pat = “<strong>AAAA</strong>“      [初始位置]<br>我们发现了匹配的情况。这部分和 Navie String Matching 一致。</p>
+<p>下一步，我们比较 <code>txt</code> 和 <code>pat</code> 的下一个window：<br>txt = “A<strong>AAA<font color="red">A</font></strong>BAAABA”<br>pat =  “<strong>AAA<font color="red">A</font></strong>“<br>示例就是KMP算法比朴素算法优化之处。我们只需比较 <code>pat</code> 中第 4 个 <font color="red">A </font>和 <code>txt</code> 中对应位置的字符串是否一致。因为我们已经知道前 3 个字符一定是匹配的，可以直接跳过。</p>
 <h3 id="预处理操作"><a href="#预处理操作" class="headerlink" title="预处理操作"></a>预处理操作</h3><p>那么，该如何知道需要跳过多少个字符呢？为了得到这个信息，我们需要做预处理，生成一个整数数组 <code>lps</code>。<code>lps</code> 告诉我们需要跳过的字符的数量。</p>
 <h4 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h4><ul>
 <li><p>KMP算法对 <code>pat</code> 做预处理，构造一个辅助的数组 <code>lps</code>($len(lps)=m$) 用来记录匹配时需要跳过的字符的数量。</p>
@@ -268,7 +260,7 @@ pat =  "**AAA<font color="red">A</font>**"
 <li><p>lps 的搜索在 <code>pat</code> 的子集中进行。</p>
 </li>
 <li><p>对 <code>pat</code> 的每个子集 <code>pat[:i+1]</code>，其中 $i=0,\cdots,m-1$，<code>lps[i]</code> 表示 the length of maximum matching proper prefix which is also a suffix of the sub-pattern <code>pat[0:i+1]</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lps[i] &#x3D; the longest of maximum mathching proper prefix of pat[0:i+1] </span><br><span class="line">                                                                          which is also a suffix of pat[0:i+1].</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lps[i] &#x3D; the longest of maximum mathching proper prefix of pat[0:i+1] </span><br><span class="line">               which is also a suffix of pat[0:i+1].</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h4 id="lps-的例子"><a href="#lps-的例子" class="headerlink" title="lps 的例子"></a>lps 的例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">For the pattern &quot;AAAA&quot;,</span><br><span class="line">lps &#x3D; [0, 1, 2, 3]</span><br><span class="line"></span><br><span class="line">For the pattern &quot;ABCDE&quot;,</span><br><span class="line">lps &#x3D; [0, 0, 0, 0, 0]</span><br><span class="line"></span><br><span class="line">For the pattern &quot;AABAACAABAA&quot;</span><br><span class="line">lps &#x3D; [0, 1, 0, 1, 2, 0, 1, 2, 3, 4, 5]</span><br><span class="line"></span><br><span class="line">For the pattern “AAACAAAAAC”, </span><br><span class="line">lps &#x3D; [0, 1, 2, 0, 1, 2, 3, 3, 3, 4] </span><br><span class="line"></span><br><span class="line">For the pattern “AAABAAA”, </span><br><span class="line">lps &#x3D; [0, 1, 2, 0, 1, 2, 3]</span><br></pre></td></tr></table></figure>
@@ -503,6 +495,54 @@ pat =  "**AAA<font color="red">A</font>**"
   
 
   
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
 
   
 
