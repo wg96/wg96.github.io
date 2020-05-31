@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="问题给定一个文本 txt ($len(txt)&#x3D;n$)，和要匹配的字符串 pat ($len(pat)&#x3D;m$)，假设 $n&gt;m$。现在写一个函数 search(pat, txt)，打印 pat 在 txt 中所有出现的位置。 示例1： 123Input:  txt &#x3D; &quot;THIS IS A TEST TEXT&quot;        pat &#x3D; &quot;T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用于字符串匹配的KMP算法">
+<meta property="og:url" content="http://yoursite.com/2020/06/01/KMP-pattern-search/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="问题给定一个文本 txt ($len(txt)&#x3D;n$)，和要匹配的字符串 pat ($len(pat)&#x3D;m$)，假设 $n&gt;m$。现在写一个函数 search(pat, txt)，打印 pat 在 txt 中所有出现的位置。 示例1： 123Input:  txt &#x3D; &quot;THIS IS A TEST TEXT&quot;        pat &#x3D; &quot;T">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/KMP-pattern-search/KMP_1.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/KMP-pattern-search/KMP_2.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/01/KMP-pattern-search/KMP_3.png">
+<meta property="article:published_time" content="2020-05-31T16:44:28.000Z">
+<meta property="article:modified_time" content="2020-05-31T16:49:37.062Z">
+<meta property="article:author" content="Z. Wang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/06/01/KMP-pattern-search/KMP_1.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/06/01/KMP-pattern-search/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>用于字符串匹配的KMP算法 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/01/KMP-pattern-search/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="Z. Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用于字符串匹配的KMP算法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-06-01 00:44:28 / 修改时间：00:49:37" itemprop="dateCreated datePublished" datetime="2020-06-01T00:44:28+08:00">2020-06-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithm</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" itemprop="url" rel="index">
+                    <span itemprop="name">算法总结</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>给定一个文本 <code>txt</code> ($len(txt)=n$)，和要匹配的字符串 <code>pat</code> ($len(pat)=m$)，假设 $n&gt;m$。现在写一个函数 <code>search(pat, txt)</code>，打印 <code>pat</code> 在 <code>txt</code> 中所有出现的位置。</p>
+<p><strong>示例1：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input:  txt &#x3D; &quot;THIS IS A TEST TEXT&quot;</span><br><span class="line">        pat &#x3D; &quot;TEST&quot;</span><br><span class="line">Output: Pattern found at index 10</span><br></pre></td></tr></table></figure>
+<p><strong>示例2:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input:  txt &#x3D;  &quot;AABAACAADAABAABA&quot;</span><br><span class="line">        pat &#x3D;  &quot;AABA&quot;</span><br><span class="line">Output: Pattern found at index 0</span><br><span class="line">        Pattern found at index 9</span><br><span class="line">        Pattern found at index 12</span><br></pre></td></tr></table></figure>
+<p>字符串匹配是计算机科学中非常重要的一个问题。当我们在 word/浏览器/数据库中搜索字符串时，就需要使用字符串匹配算法。</p>
+<a id="more"></a>
+<h2 id="KMP算法"><a href="#KMP算法" class="headerlink" title="KMP算法"></a>KMP算法</h2><h3 id="朴素匹配的缺陷"><a href="#朴素匹配的缺陷" class="headerlink" title="朴素匹配的缺陷"></a>朴素匹配的缺陷</h3><p>我们前面讨论了朴素的字符串匹配算法，最坏情况下的复杂度为 $O(m*(n-m+1))$。而KMP算法在最坏情况下的时间复杂度只有 $O(n)$。</p>
+<p>我们已经知道朴素字符串匹配算法表现不好的情况：在内层循环中，前面大部分字符都匹配，只有最后几个字符不匹配，比如说：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">txt &#x3D; &quot;AAAAAAAAAAAAAAAAAB&quot;</span><br><span class="line">pat &#x3D; &quot;AAAAB&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">txt[] &#x3D; &quot;ABABABCABABABCABABABC&quot;</span><br><span class="line">pat[] &#x3D; &quot;ABABAC&quot; (not a worst case, but a bad case for Naive)</span><br></pre></td></tr></table></figure>
+<h3 id="KMP算法的主要思想"><a href="#KMP算法的主要思想" class="headerlink" title="KMP算法的主要思想"></a>KMP算法的主要思想</h3><p>KMP算法的主要思想时：在一个window中，不论我们是否检测到不匹配的情况，我们其实也知道了下个window中的一些字符的信息。就是要利用这部分信息，不再比较已经知道match的字符串。举个例子：</p>
+<p>txt =  “AAAAABAAABA”<br>pat = “AAAA”</p>
+<font face="楷体">我们比较 `txt` 和 `pat` 的第一个窗口：</font>
+txt =  "**AAAA**ABAAABA"
+pat = "**AAAA**"      [初始位置]
+<font face="楷体">我们发现了匹配的情况。这部分和 Navie String Matching 一致。</font>
+
+<font face="楷体">下一步，我们比较 `txt` 和 `pat` 的下一个window：</font>
+txt = "A**AAA<font color="red">A</font>**BAAABA"
+pat =  "**AAA<font color="red">A</font>**"
+<font face="楷体">示例就是KMP算法比朴素算法优化之处。我们只需比较 `pat` 中第 4 个 <font color="red">A </font>和 `txt` 中对应位置的字符串是否一致。因为我们已经知道前 3 个字符一定是匹配的，可以直接跳过。</font>
+
+<h3 id="预处理操作"><a href="#预处理操作" class="headerlink" title="预处理操作"></a>预处理操作</h3><p>那么，该如何知道需要跳过多少个字符呢？为了得到这个信息，我们需要做预处理，生成一个整数数组 <code>lps</code>。<code>lps</code> 告诉我们需要跳过的字符的数量。</p>
+<h4 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h4><ul>
+<li><p>KMP算法对 <code>pat</code> 做预处理，构造一个辅助的数组 <code>lps</code>($len(lps)=m$) 用来记录匹配时需要跳过的字符的数量。</p>
+</li>
+<li><p>lps 是  <strong>longest proper prefix which is also suffix</strong> 的缩写。真前缀（proper prefix）指除了自己本身的前缀。比如说：“ABC” 的前缀是”A”, “AB”, “ABC”。而真前缀是 “A” 和 “AB”。后缀就是 “”, “C”, “BC”, 和 “ABC”。</p>
+</li>
+<li><p>lps 的搜索在 <code>pat</code> 的子集中进行。</p>
+</li>
+<li><p>对 <code>pat</code> 的每个子集 <code>pat[:i+1]</code>，其中 $i=0,\cdots,m-1$，<code>lps[i]</code> 表示 the length of maximum matching proper prefix which is also a suffix of the sub-pattern <code>pat[0:i+1]</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lps[i] &#x3D; the longest of maximum mathching proper prefix of pat[0:i+1] which is also a suffix of pat[0:i+1].</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="lps-的例子"><a href="#lps-的例子" class="headerlink" title="lps 的例子"></a>lps 的例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">For the pattern &quot;AAAA&quot;,</span><br><span class="line">lps &#x3D; [0, 1, 2, 3]</span><br><span class="line"></span><br><span class="line">For the pattern &quot;ABCDE&quot;,</span><br><span class="line">lps &#x3D; [0, 0, 0, 0, 0]</span><br><span class="line"></span><br><span class="line">For the pattern &quot;AABAACAABAA&quot;</span><br><span class="line">lps &#x3D; [0, 1, 0, 1, 2, 0, 1, 2, 3, 4, 5]</span><br><span class="line"></span><br><span class="line">For the pattern “AAACAAAAAC”, </span><br><span class="line">lps &#x3D; [0, 1, 2, 0, 1, 2, 3, 3, 3, 4] </span><br><span class="line"></span><br><span class="line">For the pattern “AAABAAA”, </span><br><span class="line">lps &#x3D; [0, 1, 2, 0, 1, 2, 3]</span><br></pre></td></tr></table></figure>
+<h4 id="生成-lsp-的算法"><a href="#生成-lsp-的算法" class="headerlink" title="生成 lsp 的算法"></a>生成 lsp 的算法</h4><p>使用变量 <code>len</code> 记录最长的真前缀的长度，<code>len</code>初始化为0。如果 <code>pat[len] = pat[i]</code>，那么 <code>len++</code>，令 <code>lps[i]</code> 等于新的 <code>len</code>。如果 <code>pat[len] != pat[i]</code> 而且 <code>len != 0</code>，则令 <code>len = lps[len-1]</code>（公式的解释见下一节），然后接着比较。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">pat &#x3D; &quot;AAACAAAA&quot;</span><br><span class="line"></span><br><span class="line">lps[0] &#x3D; 0</span><br><span class="line"></span><br><span class="line">len &#x3D; 0, i &#x3D; 1</span><br><span class="line">pat[len] &#x3D; pat[i], len++</span><br><span class="line">len &#x3D; 1, lps[1] &#x3D; 1</span><br><span class="line"></span><br><span class="line">len &#x3D; 1, i &#x3D; 2</span><br><span class="line">pat[len] &#x3D; pat[i], len++</span><br><span class="line">len &#x3D; 2, lps[2] &#x3D; 2</span><br><span class="line"></span><br><span class="line">len &#x3D; 2, i &#x3D; 3</span><br><span class="line">pat[len] !&#x3D; pat[i] and len &gt; 0</span><br><span class="line">len &#x3D; lps[len-1] &#x3D; lps[1] &#x3D; 1</span><br><span class="line"></span><br><span class="line">len &#x3D; 1, i &#x3D; 3</span><br><span class="line">pat[len] !&#x3D; pat[i] and len &gt; 0</span><br><span class="line">len &#x3D; lps[len-1] &#x3D; lps[0] &#x3D; 0</span><br><span class="line"></span><br><span class="line">len &#x3D; 0, i &#x3D; 3</span><br><span class="line">pat[len] !&#x3D; pat[i] and len &#x3D; 0</span><br><span class="line">设 lps[3] &#x3D; 0 and i &#x3D; 4</span><br><span class="line"></span><br><span class="line">len &#x3D; 0, i &#x3D; 4</span><br><span class="line">pat[len] &#x3D; pat[i], len++</span><br><span class="line">len &#x3D; 1, lps[4] &#x3D; 1, i &#x3D; 5</span><br><span class="line"></span><br><span class="line">len &#x3D; 1, i &#x3D; 5</span><br><span class="line">pat[len] &#x3D; pat[i], len++</span><br><span class="line">len &#x3D; 2, lps[5] &#x3D; 2. i &#x3D; 6</span><br><span class="line"></span><br><span class="line">len &#x3D; 2, i &#x3D; 6</span><br><span class="line">pat[len] &#x3D; pat[i], len++</span><br><span class="line">len &#x3D; 3, lps[6] &#x3D; 2. i &#x3D; 7</span><br><span class="line"></span><br><span class="line">len &#x3D; 3, i &#x3D; 7</span><br><span class="line">pat[len] !&#x3D; pat[i] and len &gt; 0</span><br><span class="line">len &#x3D; lps[len-1] &#x3D; lps[2] &#x3D; 2</span><br><span class="line"></span><br><span class="line">len &#x3D; 2, i &#x3D; 7</span><br><span class="line">pat[len] &#x3D; pat[i], len++</span><br><span class="line">len &#x3D; 3, lps[7] &#x3D; 3. i &#x3D; 8</span><br><span class="line"></span><br><span class="line">算法结束</span><br></pre></td></tr></table></figure>
+<h4 id="解释公式-len-lps-len-1"><a href="#解释公式-len-lps-len-1" class="headerlink" title="解释公式 $len = lps[len-1]$"></a>解释公式 $len = lps[len-1]$</h4><p>上面说到：如果 <code>pat[len] != pat[i]</code> 而且 <code>len != 0</code>，则令 <code>len = lps[len-1]</code>。这里详细解释该公式的含义。</p>
+<p>首先看下图的情况：</p>
+<p><img src="/2020/06/01/KMP-pattern-search/KMP_1.png" alt="(KMP_1"></p>
+<p>由于 <code>pat[len] != pat[i]</code>，所以 $lps[i]&lt;len$。注意到黄色部分和蓝色部分一定是相等的！我们只需要找出黄色部分的最长真前缀，蓝色部分一定就有对应相等的后缀，显然这就是 <code>lps[len-1]</code> 的定义！令 <code>len = lps[len-1]</code>，再比较 <code>pat[len]</code> 和 <code>pat[i]</code> 即可。图示如下：</p>
+<p><img src="/2020/06/01/KMP-pattern-search/KMP_2.png" alt="KMP_2"></p>
+<h3 id="开始搜索"><a href="#开始搜索" class="headerlink" title="开始搜索"></a>开始搜索</h3><p>在一个window中比较时，我们使用 <code>lps</code> 中的数来确定要比较的字符。也就是说，已经知道匹配的字符就不再比较了。</p>
+<p>具体实现：</p>
+<ul>
+<li><p>两个指针 <code>i</code> 和 <code>j</code>。<code>i</code> 指向 <code>txt</code>。<code>j</code> 指向 <code>pat</code> ， <code>j</code> 初始化为0。</p>
+</li>
+<li><p>如果 <code>txt[i] = pat[j]</code>，那么一直匹配：<code>i++</code>，<code>j++</code></p>
+</li>
+<li><p>如果不匹配：</p>
+<ul>
+<li><p>我们已经知道 <code>pat[0:j]</code> 和 <code>txt[i-j:i]</code> 是相等的</p>
+</li>
+<li><p>我们也知道：<code>lps[j-1]</code> 是 <code>pat[0:j]</code> 的既是真前缀又是后缀的最大长度。</p>
+</li>
+<li><p>从以上两点我们知道，如果 <code>txt[i] != pat[j]</code>，<code>i</code> 不变（注意在整个算法中，<code>i</code> 一直是递增的），然后令 <code>j = lps[j-1]</code>。因为 <code>pat[:j]</code> 一定和 <code>txt[i-j:i]</code> 是相等的（注意这里的 <code>j</code> 已经更新过），参考下面这个例子：</p>
+<p><img src="/2020/06/01/KMP-pattern-search/KMP_3.png" alt="KMP_3"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">KMPSearch</span><span class="params">(pat, txt)</span>:</span></span><br><span class="line">    m, n = len(pat), len(txt)</span><br><span class="line">    lps = [<span class="number">0</span>]*m</span><br><span class="line">    i, j = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 预处理</span></span><br><span class="line">    computeLPSArray(pat, m, lps)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> i &lt; n:</span><br><span class="line">        <span class="keyword">if</span> pat[j] == txt[i]:</span><br><span class="line">            <span class="keyword">if</span> j == m - <span class="number">1</span>:</span><br><span class="line">                print(<span class="string">"Found pattern at index"</span>, i-j)</span><br><span class="line">                j = lps[j<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> j != <span class="number">0</span>:</span><br><span class="line">                j = lps[j<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">computeLPSArray</span><span class="params">(pat, m, lps)</span>:</span></span><br><span class="line">    len, i = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> i &lt; m:</span><br><span class="line">        <span class="keyword">if</span> pat[i] == pat[len]:</span><br><span class="line">            len += <span class="number">1</span></span><br><span class="line">            lps[i] = len</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">        <span class="keyword">elif</span> len != <span class="number">0</span>:</span><br><span class="line">            len = lps[len<span class="number">-1</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            lps[i] = <span class="number">0</span></span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    txt = sys.stdin.readline().strip()</span><br><span class="line">    pat = sys.stdin.readline().strip()</span><br><span class="line">    KMPSearch(pat, txt)</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>参考：</strong></p>
+<p>[1] <a href="https://www.geeksforgeeks.org/kmp-algorithm-for-pattern-searching/" target="_blank" rel="noopener">KMP Algorithm for Pattern Searching</a></p>
+<p>[2] <strong><a href="https://www.cnblogs.com/dusf/p/kmp.html" target="_blank" rel="noopener">KMP算法详解-彻底清楚了(转载+部分原创)</a></strong></p>
+<p>[3] <a href="https://blog.csdn.net/v_july_v/article/details/7041827" target="_blank" rel="noopener">从头到尾彻底理解KMP</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/01/naive-pattern-search/" rel="prev" title="字符串匹配的朴素算法">
+      <i class="fa fa-chevron-left"></i> 字符串匹配的朴素算法
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KMP算法"><span class="nav-text">KMP算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#朴素匹配的缺陷"><span class="nav-text">朴素匹配的缺陷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KMP算法的主要思想"><span class="nav-text">KMP算法的主要思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预处理操作"><span class="nav-text">预处理操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Overview"><span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lps-的例子"><span class="nav-text">lps 的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成-lsp-的算法"><span class="nav-text">生成 lsp 的算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解释公式-len-lps-len-1"><span class="nav-text">解释公式 $len &#x3D; lps[len-1]$</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开始搜索"><span class="nav-text">开始搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-text">代码</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Z. Wang"
+      src="/uploads/avatar.png">
+  <p class="site-author-name" itemprop="name">Z. Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Z. Wang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
